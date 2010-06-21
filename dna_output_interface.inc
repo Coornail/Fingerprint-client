@@ -4,7 +4,7 @@
  * Interface for output plugins for the dna export
  */
 interface dna_output {
-  function __construct($settings);
+  function __construct();
 
   /**
    * Output provider
