@@ -19,7 +19,9 @@ function dna_menu() {
 
 
 function dna_export() {
-  module_load_include('inc', 'dna', 'output_php');
-  return '';
+  module_load_include('inc', 'dna', 'dna_output_php');
+
+  $exporter = new php_export($settings);
+  return $exporter->get_output();
 }
 

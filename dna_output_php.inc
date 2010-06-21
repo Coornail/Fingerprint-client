@@ -1,5 +1,5 @@
 <?php
-require_once 'output_interface.inc';
+require_once 'dna_output_interface.inc';
 
 class php_export implements dna_output {
   /**
@@ -8,6 +8,7 @@ class php_export implements dna_output {
   private $settings;
 
   function __construct($settings) {
+    $this->settings = $settings;
 
   }
 
