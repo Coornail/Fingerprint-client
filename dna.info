@@ -1,0 +1,6 @@
+name = Dna
+description = Exports a site fingerprint
+core = 6.x
+dependencies[] = features
+package = Pronovix
+
