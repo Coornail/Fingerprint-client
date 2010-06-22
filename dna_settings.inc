@@ -10,12 +10,38 @@ require_once 'dna_output_interface.inc';
  * Retrieves and stores the site settings
  */
 class dna_settings implements dna_output {
+  /**
+   * @var modules settings
+   */
   private $modules;
+
+  /**
+   * @var variable settings
+   */
   private $variables;
+
+  /**
+   * @var enabled modules
+   */
+  private $enabled_modules;
+
 
   function  __construct() {
     $this->pull_variables();
     $this->pull_modules();
+    $this->pull_enabled_modules();
+  }
+
+
+  /**
+   * Pulls version info about the enabled modules
+   */
+  private function pull_enabled_modules() {
+    $query = db_query('SELECT name, weight, info FROM {system}');
+    while ($row = db_fetch_object($query)) {
+      $this->enabled_modules[$row->name]['info'] = unserialize($row->info);
+      $this->enabled_modules[$row->name]['weight'] = $row->weight; 
+    }
   }
 
 
@@ -29,7 +55,7 @@ class dna_settings implements dna_output {
 
 
   /**
-   * Get all the modules settings into an internal storage
+   * Get all the modules settings into the internal storage
    */
   private function pull_modules() {
     module_load_include('inc', 'features', 'features.export');
@@ -43,11 +69,25 @@ class dna_settings implements dna_output {
         $data = $export_options();
       }
 
-      $export = array('dependencies' => module_list());
+      $features_export = $module .'_features_export';
+      if(function_exists($features_export)) {
+        $xprt = $features_export($data, $export);
+      }
+
+      $export = array();
       $export_render = $module .'_features_export_render';
       if (function_exists($export_render)) {
-        $fingerprint[$module] = $export_render($module, $data, $export);
+        $fingerprint[$module] = $export_render($module, $data, &$export);
       }
+    }
+
+    foreach (module_implements('features_api') as $module) {
+      $info_hook = $module .'_features_api';
+      $info = $info_hook();
+      $default_hook = $info[$module]['default_hook'];
+      var_dump($default_hook);
+      $huk = module_invoke_all($default_hook);
+      var_dump($huk);
     }
 
     $this->modules = $this->eval_fingerprint($fingerprint);
@@ -74,7 +114,7 @@ class dna_settings implements dna_output {
    *
    * @param $module_name String
    */
-  public function get_module($module_name) {
+  public function get_modules($module_name) {
     if (isset($this->modules[$module_name])) {
       return $this->modules[$module_name];
     }
@@ -87,7 +127,10 @@ class dna_settings implements dna_output {
    * Outputs the settings as string
    */
   public function get_output() {
-    return var_export(array('modules' => $this->modules, 'variables' => $this->variables), TRUE);
+    //return var_export(array('modules' => $this->modules, 'variables' => $this->variables), TRUE);
+    var_dump($this->enabled_modules);
+    return '';
   }
 
 }
+
