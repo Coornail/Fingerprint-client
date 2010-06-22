@@ -32,10 +32,6 @@ class dna_settings implements dna_output {
    * Get all the modules settings into an internal storage
    */
   private function pull_modules() {
-    /*
-    require_once drupal_get_path('module', 'features') .'/includes/features.node.inc';
-    require_once drupal_get_path('module', 'features') .'/includes/features.menu.inc';
-     */
     module_load_include('inc', 'features', 'features.export');
     features_include();
     $export = array();
