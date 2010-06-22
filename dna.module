@@ -21,7 +21,7 @@ function dna_menu() {
 function dna_export() {
   module_load_include('inc', 'dna', 'dna_settings');
 
-  $exporter = new dna_settings($settings);
+  $exporter = new dna_settings();
   return $exporter->get_output();
 }
 
