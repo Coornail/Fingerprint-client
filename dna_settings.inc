@@ -111,8 +111,43 @@ class dna_settings implements dna_output {
       }
     }
     $export = features_populate($stub, 'test');
+    $all = features_export_render_hooks($export, 'test', TRUE);
+    $all = $this->eval_fingerprint($all);
+    var_dump($all);
     $files = features_export_render($export, 'test', TRUE);
-    var_dump($files);
+   // var_dump($files);
+    dd($files);
+    
+    /*
+    return;
+    $fingerprint = array();
+    $module_name = 'test';
+    $reset = FALSE;
+    foreach (features_get_components(TRUE) as $module => $info) {
+      $fingerprint[$module] = array();
+      if ($options = features_invoke($module, 'features_export_options')) {
+        foreach($options as $option_key => $text) {
+          $stub[$module] = array($option_key);
+          $export = features_populate($stub, 'test');
+
+          $component_hooks = features_export_render_hooks($export, $module_name, $reset);
+
+          // Group component code into their respective files
+          foreach ($component_hooks as $component => $hooks) {
+            foreach ($hooks as $hook_name => $hook_code) {
+              //var_dump($hook_code);
+      //        $fingerprint[$module][$option_key]['arr'] = @eval($hook_code);
+              $fingerprint[$module][$option_key]['code'] = $hook_code;
+            }
+          }
+
+        }
+        //$fingerprint[$module]['__FULL__'] = features_export_render($export, 'test', TRUE);
+        dd(features_export_render($export, 'test', TRUE));
+      }
+    }*/
+
+    var_dump($fingerprint);
   }
 
 
