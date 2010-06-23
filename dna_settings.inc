@@ -60,8 +60,20 @@ class dna_settings implements dna_output {
   private function pull_modules() {
     module_load_include('inc', 'features', 'features.export');
     features_include();
-    $export = array();
     $fingerprint = array();
+
+    /** Populate depedencies **/
+    /*
+    foreach (module_list() as $module) {
+      $export_options = $module .'_features_export_options';
+      $data = array();
+      if (function_exists($export_options)) {
+        $data = $export_options();
+      }
+      $export['depedencies'][$module] = $data;
+    }
+    var_dump($export);
+
     foreach (module_list() as $module) {
       $export_options = $module .'_features_export_options';
       $data = array();
@@ -74,7 +86,7 @@ class dna_settings implements dna_output {
         $xprt = $features_export($data, $export);
       }
 
-      $export = array();
+//      $export = array();
       $export_render = $module .'_features_export_render';
       if (function_exists($export_render)) {
         $fingerprint[$module] = $export_render($module, $data, &$export);
@@ -91,6 +103,16 @@ class dna_settings implements dna_output {
     }
 
     $this->modules = $this->eval_fingerprint($fingerprint);
+     */
+    $stub = array();
+    foreach (features_get_components(TRUE) as $component => $info) {
+      if ($options = features_invoke($component, 'features_export_options')) {
+        $stub[$component] = array_keys($options);
+      }
+    }
+    $export = features_populate($stub, 'test');
+    $files = features_export_render($export, 'test', TRUE);
+    var_dump($files);
   }
 
 
@@ -128,7 +150,8 @@ class dna_settings implements dna_output {
    */
   public function get_output() {
     //return var_export(array('modules' => $this->modules, 'variables' => $this->variables), TRUE);
-    var_dump($this->enabled_modules);
+    //var_dump($this->enabled_modules);
+    dd($this->modules);
     return '';
   }
 
