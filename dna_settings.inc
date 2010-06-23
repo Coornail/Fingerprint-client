@@ -60,7 +60,21 @@ class dna_settings implements dna_output {
   private function pull_modules() {
     module_load_include('inc', 'features', 'features.export');
     features_include();
-    $fingerprint = array();
+
+    foreach (module_list() as $module) {
+      $export_options = $module .'_features_export_options';
+      $data = array();
+      if (function_exists($export_options)) {
+        $data = $export_options();
+      }
+
+      $export = array('dependencies' => module_list());
+      $export_render = $module .'_features_export_render';
+      if (function_exists($export_render)) {
+        $fingerprint[$module]['default'] = $export_render($module, $data, $export);
+      }
+    }
+
     $stub = array();
     foreach (features_get_components(TRUE) as $component => $info) {
       if ($options = features_invoke($component, 'features_export_options')) {
@@ -69,7 +83,7 @@ class dna_settings implements dna_output {
     }
     $export = features_populate($stub, 'test');
     $rendered_hooks = features_export_render_hooks($export, 'test', TRUE);
-    $this->modules = $this->eval_fingerprint($rendered_hooks);
+    $this->modules = $this->eval_fingerprint(array_merge_recursive($rendered_hooks, $fingerprint));
   }
 
 
