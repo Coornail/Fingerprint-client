@@ -116,21 +116,6 @@ class dna_settings implements dna_output {
     return $fingerprint;
   }
 
-
-  /**
-   * Returns a module exportable settings
-   *
-   * @param $module_name String
-   */
-  public function get_modules(String $module_name) {
-    if (isset($this->modules[$module_name])) {
-      return $this->modules[$module_name];
-    }
-
-    return FALSE;
-  }
-
-
   /**
    * Outputs the settings as string
    */
@@ -146,9 +131,13 @@ class dna_settings implements dna_output {
    * Returns the module info in an array
    * This has to be consistent across versions
    *
-   * @returns Array the module info
+   * @param module name
+   * @return Mixed Array of the module info, or FALSE if not found
    */
   public function module_info(String $module) {
+    if (!isset($this->module_info[$module]))
+      return FALSE;
+
     $ret = array();
     return array_merge($this->module_info[$module], $this->modules[$module]);
   }
