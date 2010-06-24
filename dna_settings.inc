@@ -16,22 +16,22 @@ class dna_settings implements dna_output {
   /**
    * @var modules settings
    */
-  private $modules;
+  protected $modules;
 
   /**
    * @var variable settings
    */
-  private $variables;
+  protected $variables;
 
   /**
    * @var enabled modules
    */
-  private $enabled_modules;
+  protected $enabled_modules;
 
   /**
    * @var timestamp
    */
-  private $timestamp;
+  protected $timestamp;
 
 
   /**
@@ -72,7 +72,7 @@ class dna_settings implements dna_output {
   /**
    * Get all the modules settings into the internal storage
    */
-  private function pull_modules() {
+  protected function pull_modules() {
     module_load_include('inc', 'features', 'features.export');
     features_include();
 
@@ -105,12 +105,12 @@ class dna_settings implements dna_output {
   /**
    * Evals the elements of the fingerprint to render it as an array
    */
-  private function eval_fingerprint(Array &$fingerprint) {
+  public static function eval_fingerprint(Array &$fingerprint) {
     foreach ($fingerprint as $key => &$element) {
       if (is_string($element)) {
         $fingerprint[$key] = @eval($element);
       } else if (is_array($element)) {
-        $this->eval_fingerprint($element);
+        dna_settings::eval_fingerprint($element);
       }
     }
     return $fingerprint;
