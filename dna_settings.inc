@@ -46,10 +46,11 @@ class dna_settings implements dna_output {
    * Pulls version info about the enabled modules
    */
   private function pull_enabled_modules() {
-    $query = db_query('SELECT name, weight, info FROM {system}');
+    $query = db_query('SELECT name, weight, status, info FROM {system}');
     while ($row = db_fetch_object($query)) {
       $this->enabled_modules[$row->name]['info'] = unserialize($row->info);
       $this->enabled_modules[$row->name]['weight'] = $row->weight; 
+      $this->enabled_modules[$row->name]['status'] = (bool)$row-status;
     }
   }
 
@@ -133,6 +134,18 @@ class dna_settings implements dna_output {
     //var_dump($this->enabled_modules);
     dd($this);
     return '';
+  }
+
+
+  /**
+   * Returns the module info in an array
+   * This has to be consistent across versions
+   *
+   * @returns Array the module info
+   */
+  public function module_info($module) {
+    $ret = array();
+    return array_merge($this->module_info[$module], $this->modules[$module]);
   }
 
 }
