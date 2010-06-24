@@ -34,6 +34,11 @@ class dna_settings implements dna_output {
   private $timestamp;
 
 
+  /**
+   * When constructed it pulls in all the modules
+   *
+   * @todo change it to ondemand later
+   */
   function  __construct() {
     $this->pull_variables();
     $this->pull_modules();
@@ -100,7 +105,7 @@ class dna_settings implements dna_output {
   /**
    * Evals the elements of the fingerprint to render it as an array
    */
-  private function eval_fingerprint(&$fingerprint) {
+  private function eval_fingerprint(Array &$fingerprint) {
     foreach ($fingerprint as $key => &$element) {
       if (is_string($element)) {
         $fingerprint[$key] = @eval($element);
@@ -117,7 +122,7 @@ class dna_settings implements dna_output {
    *
    * @param $module_name String
    */
-  public function get_modules($module_name) {
+  public function get_modules(String $module_name) {
     if (isset($this->modules[$module_name])) {
       return $this->modules[$module_name];
     }
@@ -143,7 +148,7 @@ class dna_settings implements dna_output {
    *
    * @returns Array the module info
    */
-  public function module_info($module) {
+  public function module_info(String $module) {
     $ret = array();
     return array_merge($this->module_info[$module], $this->modules[$module]);
   }
