@@ -4,6 +4,9 @@
  * @file Site dna storage class
  */
 
+// If the storage format changes, make sure to increase!
+define('DNA_VERSION', '0.1');
+
 require_once 'dna_output_interface.inc';
 
 /**
@@ -25,11 +28,17 @@ class dna_settings implements dna_output {
    */
   private $enabled_modules;
 
+  /**
+   * @var timestamp
+   */
+  private $timestamp;
+
 
   function  __construct() {
     $this->pull_variables();
     $this->pull_modules();
     $this->pull_enabled_modules();
+    $this->timestamp = time();
   }
 
 
