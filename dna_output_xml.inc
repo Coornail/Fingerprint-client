@@ -21,8 +21,8 @@ class dna_xml extends dna_settings {
     $ret['timestamp'] = $this->timestamp;
     $ret['variables'] = $this->variables;
     $ret['modules'] = $this->modules;
-    var_dump($this->toXML($ret));
-    return $this->toXML($ret);
+    $xml = $this->toXML($ret);
+    return $this->format_xml($xml);
   }
 
 
@@ -45,9 +45,14 @@ class dna_xml extends dna_settings {
 
     // loop through the data passed in.
     foreach($data as $key => $value) {
+
+       if (empty($value)) {
+         continue;
+       }
+
       // no numeric keys in our xml please!
       if (is_numeric($key)) {
-        $key = "unknownNode_". (string) $key;
+        $key = 'element';
       }
 
       // replace anything not alpha numeric or '_'
@@ -60,12 +65,29 @@ class dna_xml extends dna_settings {
       } else {
         // add single node.
         $value = htmlentities($value);
-        $xml->addChild($key,$value);
+        $xml->addChild($key, $value);
       }
 
     }
 
-    return $xml->asXML();
+    return $xml;
+  }
+
+
+  /**
+   * Formats xml to be well structured, indented
+   * and higlighted as html
+   *
+   * @return String html output
+   */
+  private static function format_xml(SimpleXMLElement $xml) {
+    // Only domdocument can indent xml, convert
+    $dom = dom_import_simplexml($xml)->ownerDocument;
+    $dom->formatOutput = true;
+    $xml_string = $dom->saveXML(); 
+
+    require_once drupal_get_path('module', 'geshifilter') .'/geshifilter.pages.inc';
+    return geshifilter_process($xml_string, 'XML');
   }
 
 }
