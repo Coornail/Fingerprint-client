@@ -81,7 +81,7 @@ class dna_settings implements dna_output {
       $export = array('dependencies' => module_list());
       $export_render = $module .'_features_export_render';
       if (function_exists($export_render)) {
-        $fingerprint[$module]['default'] = $export_render($module, $data, $export);
+        $fingerprint[$module]['#default'] = $export_render($module, $data, $export);
       }
     }
 
