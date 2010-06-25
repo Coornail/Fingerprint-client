@@ -11,6 +11,7 @@ class dna_xml extends dna_settings {
     parent::__construct();
   }
 
+
   /**
    * @override
    *
@@ -18,6 +19,7 @@ class dna_xml extends dna_settings {
    */
   public function get_output() {
     $ret = array();
+    $ret['export_version'] = DNA_VERSION;
     $ret['timestamp'] = $this->timestamp;
     $ret['variables'] = $this->variables;
     $ret['modules'] = $this->modules;
@@ -40,17 +42,15 @@ class dna_xml extends dna_settings {
     }
 
     if ($xml == null) {
-      $xml = simplexml_load_string("<?xml version='1.0' encoding='utf-8'?><$rootNodeName />");
+      $xml = simplexml_load_string('<?xml version="1.0" encoding="utf-8"?><'. $rootNodeName .' /> ');
     }
 
-    // loop through the data passed in.
     foreach($data as $key => $value) {
-
        if (empty($value)) {
          continue;
        }
 
-      // no numeric keys in our xml please!
+      // no numeric keys
       if (is_numeric($key)) {
         $key = 'element';
       }
