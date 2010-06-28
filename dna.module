@@ -52,11 +52,10 @@ function dna_form(&$node) {
     '#title' => t('Title'),
     '#type' => 'textfield',
     '#disabled' => TRUE,
-    '#value' => t('Site dump at @time', array('@time' => time())),
+    '#value' => isset($node->title) ? $node->title : t('Site dump at @time', array('@time' => time())),
   );
 
   module_load_include('inc', 'dna', 'dna_settings');
-  //module_load_include('inc', 'dna', 'dna_output_xml');
 
   $exporter = new dna_settings();
 
@@ -64,11 +63,8 @@ function dna_form(&$node) {
     '#title' => t('Body'),
     '#type' => 'textarea',
     '#disabled' => TRUE,
-    '#value' => $exporter->get_output()
+    '#value' => isset($node->body) ? $node->body : $exporter->get_output(),
   );
-
-  $form['format'] = filter_form(db_result(db_query('SELECT format FROM {filter_formats} WHERE name="%s"', 'Full HTML')));
-  $form['format']['#disabled'] = TRUE;
 
   return $form;
 }
