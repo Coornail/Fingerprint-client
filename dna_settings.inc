@@ -18,29 +18,29 @@ class dna_settings implements dna_output {
    * @var modules settings
    */
   protected $modules = array();
-  protected function get_modules() {return $this->modules;}
-  protected function set_modules($modules) {$this->modules = $modules;}
+  public function get_modules() {return $this->modules;}
+  public function set_modules($modules) {$this->modules = $modules;}
 
   /**
    * @var variable settings
    */
   protected $variables = array();
-  protected function get_variables() {return $this->variables;}
-  protected function set_variables($variables) {$this->variables = $variables;}
+  public function get_variables() {return $this->variables;}
+  public function set_variables($variables) {$this->variables = $variables;}
 
   /**
    * @var enabled modules
    */
   protected $enabled_modules = array();
-  protected function get_enabled_modules() {return $this->enabled_modules;}
-  protected function set_enabled_modules($enabled_modules) {$this->enabled_modules = $enabled_modules;}
+  public function get_enabled_modules() {return $this->enabled_modules;}
+  public function set_enabled_modules($enabled_modules) {$this->enabled_modules = $enabled_modules;}
 
   /**
    * @var timestamp
    */
   protected $timestamp = array();
-  protected function get_timestamp() {return $this->timestamp;}
-  protected function set_timestamp($timestamp) {$this->timestamp = $timestamp;}
+  public function get_timestamp() {return $this->timestamp;}
+  public function set_timestamp($timestamp) {$this->timestamp = $timestamp;}
 
   /**
    * @var version
