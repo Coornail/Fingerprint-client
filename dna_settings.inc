@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @package dna
  * @file Site dna storage class
  */
 
@@ -47,7 +48,8 @@ class dna_settings implements dna_output {
   function  __construct($settings = array()) {
     if (!empty($settinsg)) {
       $this->import_settings($settings);
-    } else {
+    }
+    else {
       $this->pull_variables();
       $this->pull_modules();
       $this->pull_enabled_modules();
@@ -61,7 +63,7 @@ class dna_settings implements dna_output {
    */
   protected function import_settings($settings) {
     if (!isset($ret['export_version']) || $ret['export_version'] == DNA_VERSION) {
-      throw new Exception ("Importing version ". $ret['export_version'] .' doesn\'t match current version: '. DNA_VERSION , E_USER_WARNING);
+      throw new Exception("Importing version ". $ret['export_version'] .' doesn\'t match current version: '. DNA_VERSION , E_USER_WARNING);
     }
     if (isset($ret['timestamp'])) {
       $this->timestamp = $settings['timestamp'];
@@ -84,7 +86,7 @@ class dna_settings implements dna_output {
   /**
    * Pulls version info about the enabled modules
    */
-  private function pull_enabled_modules() {
+  protected function pull_enabled_modules() {
     $query = db_query('SELECT name, weight, status, info FROM {system}');
     while ($row = db_fetch_object($query)) {
       $this->enabled_modules[$row->name]['info'] = unserialize($row->info);
@@ -97,7 +99,7 @@ class dna_settings implements dna_output {
   /**
    * Get all the variables into an internal storage
    */
-  private function pull_variables() {
+  protected function pull_variables() {
     global $conf;
     $this->variables = $conf;
   }
@@ -143,7 +145,8 @@ class dna_settings implements dna_output {
     foreach ($fingerprint as $key => &$element) {
       if (is_string($element)) {
         $fingerprint[$key] = @eval($element);
-      } else if (is_array($element)) {
+      }
+      else if (is_array($element)) {
         dna_settings::eval_fingerprint($element);
       }
     }
@@ -167,8 +170,9 @@ class dna_settings implements dna_output {
    * @return Mixed Array of the module info, or FALSE if not found
    */
   public function module_info(String $module) {
-    if (!isset($this->module_info[$module]))
+    if (!isset($this->module_info[$module])) {
       return FALSE;
+    }
 
     return array_merge($this->module_info[$module], $this->modules[$module]);
   }
@@ -212,7 +216,7 @@ class dna_settings implements dna_output {
     $obj_class = get_class($obj);
     // We create the frist key with the classname, so no information is lost
     $arr[$obj_class] = (array)$obj;
-    foreach($arr[$obj_class] as $key => &$item) {
+    foreach ($arr[$obj_class] as $key => &$item) {
       if (is_object($item)) {
         dna_settings::object_to_array_recursive($item);
       }
