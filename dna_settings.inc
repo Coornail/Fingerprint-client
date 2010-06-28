@@ -120,10 +120,8 @@ class dna_settings implements dna_output {
    * Outputs the settings as string
    */
   public function get_output() {
-    //return var_export(array('modules' => $this->modules, 'variables' => $this->variables), TRUE);
+    return var_export(array('modules' => $this->modules, 'variables' => $this->variables), TRUE);
     //var_dump($this->enabled_modules);
-    dd($this);
-    return '';
   }
 
 
@@ -140,6 +138,21 @@ class dna_settings implements dna_output {
 
     $ret = array();
     return array_merge($this->module_info[$module], $this->modules[$module]);
+  }
+
+
+  /**
+   * Returns the items that has to be in the output
+   *
+   * @return Array Associative array of the items and the names
+   */
+  protected function get_output_items() {
+    $ret['export_version'] = DNA_VERSION;
+    $ret['timestamp'] = $this->timestamp;
+    $ret['variables'] = $this->variables;
+    $ret['modules'] = $this->modules;
+    
+    return $ret;
   }
 
 }

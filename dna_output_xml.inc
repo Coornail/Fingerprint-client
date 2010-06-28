@@ -18,13 +18,13 @@ class dna_xml extends dna_settings {
    * Outputs the module info as xml
    */
   public function get_output() {
-    $ret = array();
-    $ret['export_version'] = DNA_VERSION;
-    $ret['timestamp'] = $this->timestamp;
-    $ret['variables'] = $this->variables;
-    $ret['modules'] = $this->modules;
+    $ret = $this->get_output_items();
     $xml = $this->toXML($ret);
-    return $this->format_xml($xml);
+
+    // Only domdocument can indent xml, convert
+    $dom = dom_import_simplexml($xml)->ownerDocument;
+    $dom->formatOutput = TRUE;
+    return $dom->saveXML(); 
   }
 
 
@@ -32,8 +32,6 @@ class dna_xml extends dna_settings {
    * Parses php array into xml
    *
    * mostly copied from http://snipplr.com/view.php?codeview&id=3491
-   *
-   * @todo damn views object
    */
   private function toXML(array $data, $rootNodeName = 'data', $xml=null) {
     // turn off compatibility mode as simple xml throws a wobbly if you don't.
@@ -84,14 +82,9 @@ class dna_xml extends dna_settings {
    *
    * @return String html output
    */
-  private static function format_xml(SimpleXMLElement $xml) {
-    // Only domdocument can indent xml, convert
-    $dom = dom_import_simplexml($xml)->ownerDocument;
-    $dom->formatOutput = true;
-    $xml_string = $dom->saveXML(); 
-
+  public static function format_xml($xml) {
     require_once drupal_get_path('module', 'geshifilter') .'/geshifilter.pages.inc';
-    return geshifilter_process($xml_string, 'XML');
+    return geshifilter_process($xml, 'XML');
   }
 
 
