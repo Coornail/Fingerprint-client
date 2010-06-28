@@ -6,14 +6,6 @@
 function dna_menu() {
   $items = array();
 
-  $items['dna/export'] = array(
-    'title' => 'Export all',
-    'description' => 'Export fingerprint',
-    'page callback' => 'dna_export',
-    'access arguments' => array('administer content'),
-    'type' => MENU_NORMAL_ITEM,
-  );
-
   $items['node/%node/dna_send'] = array(
     'title' => 'Send to pronvoix',
     'page callback' => 'dna_send',
@@ -22,7 +14,6 @@ function dna_menu() {
     'access callback' => '_node_is_dna',
     'access arguments' => array(1),
   );
-
 
   return $items;
 }
@@ -41,14 +32,6 @@ function dna_send($node) {
  */
 function _node_is_dna($node) {
   return $node->type == 'dna';
-}
-
-
-function dna_export() {
-  module_load_include('inc', 'dna', 'dna_output_xml');
-
-  $exporter = new dna_xml();
-  return $exporter->get_output();
 }
 
 
