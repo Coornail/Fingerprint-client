@@ -54,7 +54,7 @@ class dna_xml extends dna_settings {
       }
 
       if (is_object($value)) {
-        dna_xml::object_to_array_recursive($value);
+        dna_settings::object_to_array_recursive($value);
       }
 
       // replace anything not alpha numeric or '_'
