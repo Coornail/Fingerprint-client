@@ -80,11 +80,29 @@ class dna_xml extends dna_settings {
 
 
   /**
-   * Tries highlighting xml if geshi filter is enabled
+   * Formats and highlights xml
+   * 
+   * Tries highlight if geshifilter is enabled
+   * Cleans up xml if tidy extension is installed
    *
    * @return String html output
    */
   public static function format_xml($xml) {
+    // Check for broken xml (for example node teaser)
+    if (extension_loaded('tidy')) {
+      $config = array(
+        'indent'         => true,
+        'output-xml'     => true,
+        'input-xml'     => true,
+        'wrap'         => '1000'
+      );
+
+      $tidy = new tidy();
+      $tidy->parseString($xml, $config, 'utf8');
+      $tidy->cleanRepair();
+      $xml = tidy_get_output($tidy);
+    }
+
     if (module_exists('geshifilter')) {
       require_once drupal_get_path('module', 'geshifilter') .'/geshifilter.pages.inc';
       return geshifilter_process($xml, 'XML');
