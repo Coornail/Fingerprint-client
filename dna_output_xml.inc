@@ -87,34 +87,4 @@ class dna_xml extends dna_settings {
     return geshifilter_process($xml, 'XML');
   }
 
-
-  /**
-   * Converts an object to an array recursively
-   * Resolves references by hashing the objects (for that you need the spl
-   * extension)
-   *
-   * @param Class a class object
-   */
-  private static function object_to_array_recursive(&$obj) {
-    static $processed_objects = array();
-
-    $object_hash = spl_object_hash($obj);
-    if (in_array($object_hash, $processed_objects)) {
-      $obj = '[reference] '. $object_hash;
-      return;
-    }
-    $processed_objects[] = $object_hash;
-
-    $obj_class = get_class($obj);
-    // We create the frist key with the classname, so no information is lost
-    $arr[$obj_class] = (array)$obj;
-    foreach($arr[$obj_class] as $key => &$item) {
-      if (is_object($item)) {
-        dna_xml::object_to_array_recursive($item);
-      }
-    }
-    $obj = $arr;
-    $obj['hash'] = $object_hash;
-  }
-
 }
