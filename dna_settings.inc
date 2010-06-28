@@ -195,6 +195,8 @@ class dna_settings implements dna_output {
    * Resolves references by hashing the objects (for that you need the spl
    * extension)
    *
+   * @todo handle recursive arrays
+   *
    * @param Class a class object
    */
   protected static function object_to_array_recursive(&$obj) {

@@ -20,8 +20,85 @@ function dna_menu() {
 
 function dna_export() {
   module_load_include('inc', 'dna', 'dna_settings');
+  module_load_include('inc', 'dna', 'dna_output_xml');
 
-  $exporter = new dna_settings();
+  $exporter = new dna_xml();
   return $exporter->get_output();
 }
 
+
+/**
+ * Implementation of hook_node_info()
+ */
+function dna_node_info() {
+  return array(
+    'dna' => array(
+      'name' => t('Site dna'),
+      'module' => 'dna',
+      'description' => t('Export a site dump from exportables'),
+      'has_title' => TRUE,
+      'has_body' => TRUE,
+    )
+  );
+}
+
+
+/**
+ * Implementation of hook_form().
+ * Form for the dna node type
+ */
+function dna_form(&$node) {
+  $form = array();
+  $form['title'] = array (
+    '#title' => t('Title'),
+    '#type' => 'textfield',
+    '#disabled' => TRUE,
+    '#value' => t('Site dump at @time', array('@time' => time())),
+  );
+
+  module_load_include('inc', 'dna', 'dna_settings');
+  //module_load_include('inc', 'dna', 'dna_output_xml');
+
+  $exporter = new dna_settings();
+
+  $form['body'] = array(
+    '#title' => t('Body'),
+    '#type' => 'textarea',
+    '#disabled' => TRUE,
+    '#value' => $exporter->get_output()
+  );
+
+  $form['format'] = filter_form(db_result(db_query('SELECT format FROM {filter_formats} WHERE name="%s"', 'Full HTML')));
+  $form['format']['#disabled'] = TRUE;
+
+  return $form;
+}
+
+
+/**
+ * Implementation of hook_nodeap().
+ *
+ * @todo make the node load and display nicer
+ */
+function dna_nodeapi(&$node, $op, $teaser, $page) {
+  if ($node->type != 'dna')
+    return;
+
+  /**
+   * Save the dna before the html filter screws it up
+   */
+  if ($op == 'load') {
+    $node->dna = unserialize($node->body);
+  }
+
+  if ($op == 'view') {
+    
+    module_load_include('inc', 'dna', 'dna_settings');
+    module_load_include('inc', 'dna', 'dna_output_xml');
+
+    $exporter = new dna_xml($node->dna);
+    require_once drupal_get_path('module', 'geshifilter') .'/geshifilter.pages.inc';
+    $node->content['body']['#value'] =  geshifilter_geshi_process($exporter->get_output(), 'xml');
+  }
+
+}
