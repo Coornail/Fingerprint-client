@@ -12,9 +12,35 @@ function dna_menu() {
     'page callback' => 'dna_export',
     'access arguments' => array('administer content'),
     'type' => MENU_NORMAL_ITEM,
-   );
+  );
+
+  $items['node/%node/dna_send'] = array(
+    'title' => 'Send to pronvoix',
+    'page callback' => 'dna_send',
+    'page arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'access callback' => '_node_is_dna',
+    'access arguments' => array(1),
+  );
+
 
   return $items;
+}
+
+
+function dna_send($node) {
+  return '';
+}
+
+
+/**
+ * Checks if the node type is dna
+ *
+ * @return bool True if it's a dna site dump, else otherwise
+ *
+ */
+function _node_is_dna($node) {
+  return $node->type == 'dna';
 }
 
 
