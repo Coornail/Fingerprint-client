@@ -55,7 +55,8 @@ class dna_xml extends dna_settings {
         $key = 'element';
       }
 
-      if (is_object($value)) {
+      // __PHP_Incomplete_Class is not is_object(), have to workaround... 
+      if (is_object($value) || !(is_int($value) || is_string($value) || is_array($value) || is_bool($value)) ) {
         dna_settings::object_to_array_recursive($value);
       }
 
@@ -64,7 +65,6 @@ class dna_xml extends dna_settings {
 
       if (is_array($value)) {
         $node = $xml->addChild($key);
-        // recrusive call.
         $this->toXml($value, $rootNodeName, $node);
       }
       else {

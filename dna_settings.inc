@@ -223,6 +223,20 @@ class dna_settings implements dna_output {
     $processed_objects[] = $object_hash;
 
     $obj_class = get_class($obj);
+
+    /**
+     * Workaround __PHP_Incomplete_Class
+     * When unserialize() called and the class is not in the memory, php
+     * doesn't know about the class.
+     * Fortunately it saves the class name, so we can still build the array
+     **/
+    if ($obj_class == '__PHP_Incomplete_Class') {
+      $obj = (array)$obj;
+      $obj_class = $obj['__PHP_Incomplete_Class_Name'];
+      unset($obj['__PHP_Incomplete_Class']);
+      unset($obj['__PHP_Incomplete_Class_Name']);
+    }
+
     // We create the frist key with the classname, so no information is lost
     $arr[$obj_class] = (array)$obj;
     foreach ($arr[$obj_class] as $key => &$item) {
