@@ -1,5 +1,5 @@
 <?php
-require_once 'dna_output_interface.inc';
+module_load_include('inc', 'dna', 'dna_settings');
 
 /**
  * Decorator class around dna_settings

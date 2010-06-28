@@ -19,7 +19,6 @@ function dna_menu() {
 
 
 function dna_export() {
-  module_load_include('inc', 'dna', 'dna_settings');
   module_load_include('inc', 'dna', 'dna_output_xml');
 
   $exporter = new dna_xml();
@@ -93,7 +92,6 @@ function dna_nodeapi(&$node, $op, $teaser, $page) {
 
   if ($op == 'view') {
     
-    module_load_include('inc', 'dna', 'dna_settings');
     module_load_include('inc', 'dna', 'dna_output_xml');
 
     $exporter = new dna_xml($node->dna);
