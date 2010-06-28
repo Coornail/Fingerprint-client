@@ -95,7 +95,15 @@ function dna_nodeapi(&$node, $op, $teaser, $page) {
     module_load_include('inc', 'dna', 'dna_output_xml');
     $exporter = new dna_xml($node->dna);
 
-    $node->content['body']['#value'] = dna_xml::format_xml($exporter->get_output());
+    if ($teaser) {
+      $exporter->set_modules(array());
+      $exporter->set_variables(array());
+      $exporter->set_enabled_modules(array());
+      $node->content['teaser']['#value'] = dna_xml::format_xml($exporter->get_output());
+      $node->content['body'] = '';
+    } else {
+      $node->content['body']['#value'] = dna_xml::format_xml($exporter->get_output());
+    }
   }
 
 }
