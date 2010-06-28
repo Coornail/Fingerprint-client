@@ -80,14 +80,17 @@ class dna_xml extends dna_settings {
 
 
   /**
-   * Formats xml to be well structured, indented
-   * and higlighted as html
+   * Tries highlighting xml if geshi filter is enabled
    *
    * @return String html output
    */
   public static function format_xml($xml) {
-    require_once drupal_get_path('module', 'geshifilter') .'/geshifilter.pages.inc';
-    return geshifilter_process($xml, 'XML');
+    if (module_exists('geshifilter')) {
+      require_once drupal_get_path('module', 'geshifilter') .'/geshifilter.pages.inc';
+      return geshifilter_process($xml, 'XML');
+    }
+
+    return str_replace("\n", '<br />', htmlspecialchars($xml));
   }
 
 }
