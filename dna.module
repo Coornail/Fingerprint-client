@@ -48,7 +48,7 @@ function dna_node_info() {
  */
 function dna_form(&$node) {
   $form = array();
-  $form['title'] = array (
+  $form['title'] = array(
     '#title' => t('Title'),
     '#type' => 'textfield',
     '#disabled' => TRUE,
@@ -80,8 +80,9 @@ function dna_form(&$node) {
  * @todo make the node load and display nicer
  */
 function dna_nodeapi(&$node, $op, $teaser, $page) {
-  if ($node->type != 'dna')
+  if ($node->type != 'dna') {
     return;
+  }
 
   /**
    * Save the dna before the html filter screws it up
@@ -96,8 +97,9 @@ function dna_nodeapi(&$node, $op, $teaser, $page) {
 
     if (module_exists('geshifilter')) {
       $node->content['body']['#value'] = dna_xml::format_xml($exporter->get_output());
-    } else {
-      $node->content['body']['#value'] = str_replace("\n", '<br>', htmlspecialchars($exporter->get_output()));
+    }
+    else {
+      $node->content['body']['#value'] = str_replace("\n", '<br />', htmlspecialchars($exporter->get_output()));
     }
   }
 
