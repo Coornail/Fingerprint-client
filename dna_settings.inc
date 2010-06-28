@@ -18,21 +18,29 @@ class dna_settings implements dna_output {
    * @var modules settings
    */
   protected $modules = array();
+  protected function get_modules() {return $this->modules;}
+  protected function set_modules($modules) {$this->modules = $modules;}
 
   /**
    * @var variable settings
    */
   protected $variables = array();
+  protected function get_variables() {return $this->variables;}
+  protected function set_variables($variables) {$this->variables = $variables;}
 
   /**
    * @var enabled modules
    */
   protected $enabled_modules = array();
+  protected function get_enabled_modules() {return $this->enabled_modules;}
+  protected function set_enabled_modules($enabled_modules) {$this->enabled_modules = $enabled_modules;}
 
   /**
    * @var timestamp
    */
   protected $timestamp = array();
+  protected function get_timestamp() {return $this->timestamp;}
+  protected function set_timestamp($timestamp) {$this->timestamp = $timestamp;}
 
   /**
    * @var version
@@ -46,7 +54,7 @@ class dna_settings implements dna_output {
    * @todo change it to ondemand later
    */
   function  __construct($settings = array()) {
-    if (!empty($settinsg)) {
+    if (!empty($settings)) {
       $this->import_settings($settings);
     }
     else {
@@ -62,23 +70,23 @@ class dna_settings implements dna_output {
    * Imports settings that's exported from get_output_items()
    */
   protected function import_settings($settings) {
-    if (!isset($ret['export_version']) || $ret['export_version'] == DNA_VERSION) {
-      throw new Exception("Importing version ". $ret['export_version'] .' doesn\'t match current version: '. DNA_VERSION , E_USER_WARNING);
+    if (!isset($settings['export_version']) || $settings['export_version'] != DNA_VERSION) {
+      throw new Exception("Importing version ". $settings['export_version'] .' doesn\'t match current version: '. DNA_VERSION , E_USER_WARNING);
     }
-    if (isset($ret['timestamp'])) {
-      $this->timestamp = $settings['timestamp'];
-    }
-
-    if (isset($ret['variables'])) {
-      $this->timestamp = $settings['variables'];
+    if (isset($settings['timestamp'])) {
+      $this->set_timestamp($settings['timestamp']);
     }
 
-    if (isset($ret['modules'])) {
-      $this->timestamp = $settings['modules'];
+    if (isset($settings['variables'])) {
+      $this->set_variables($settings['variables']);
     }
 
-    if (isset($ret['enabled_modules'])) {
-      $this->timestamp = $settings['enabled_modules'];
+    if (isset($settings['modules'])) {
+      $this->set_modules($settings['modules']);
+    }
+
+    if (isset($settings['enabled_modules'])) {
+      $this->set_enabled_modules($settings['enabled_modules']);
     }
   }
 
@@ -101,7 +109,7 @@ class dna_settings implements dna_output {
    */
   protected function pull_variables() {
     global $conf;
-    $this->variables = $conf;
+    $this->set_variables($conf);
   }
 
 
@@ -134,7 +142,7 @@ class dna_settings implements dna_output {
     }
     $export = features_populate($stub, 'test');
     $rendered_hooks = features_export_render_hooks($export, 'test', TRUE);
-    $this->modules = $this->eval_fingerprint(array_merge_recursive($rendered_hooks, $fingerprint));
+    $this->set_modules($this->eval_fingerprint(array_merge_recursive($rendered_hooks, $fingerprint)));
   }
 
 
@@ -152,6 +160,7 @@ class dna_settings implements dna_output {
     }
     return $fingerprint;
   }
+
 
   /**
    * Outputs the settings as a serialized string
@@ -185,10 +194,10 @@ class dna_settings implements dna_output {
    */
   protected function get_output_items() {
     $ret['export_version'] = $this->version;
-    $ret['timestamp'] = $this->timestamp;
-    $ret['variables'] = $this->variables;
-    $ret['modules'] = $this->modules;
-    $ret['enabled_modules'] = $this->enabled_modules;
+    $ret['timestamp'] = $this->get_timestamp();
+    $ret['variables'] = $this->get_variables();
+    $ret['modules'] = $this->get_modules();
+    $ret['enabled_modules'] = $this->get_enabled_modules();
     
     return $ret;
   }

@@ -9,8 +9,8 @@ module_load_include('inc', 'dna', 'dna_settings');
 class dna_xml extends dna_settings {
 
 
-  function __construct() {
-    parent::__construct();
+  function __construct($settings = array()) {
+    parent::__construct($settings);
   }
 
 
