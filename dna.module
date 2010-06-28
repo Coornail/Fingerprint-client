@@ -91,12 +91,14 @@ function dna_nodeapi(&$node, $op, $teaser, $page) {
   }
 
   if ($op == 'view') {
-    
     module_load_include('inc', 'dna', 'dna_output_xml');
-
     $exporter = new dna_xml($node->dna);
-    require_once drupal_get_path('module', 'geshifilter') .'/geshifilter.pages.inc';
-    $node->content['body']['#value'] =  geshifilter_geshi_process($exporter->get_output(), 'xml');
+
+    if (module_exists('geshifilter')) {
+      $node->content['body']['#value'] = dna_xml::format_xml($exporter->get_output());
+    } else {
+      $node->content['body']['#value'] = str_replace("\n", '<br>', htmlspecialchars($exporter->get_output()));
+    }
   }
 
 }
