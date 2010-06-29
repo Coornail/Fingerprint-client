@@ -99,7 +99,7 @@ class dna_settings implements dna_output {
     while ($row = db_fetch_object($query)) {
       $this->enabled_modules[$row->name]['info'] = unserialize($row->info);
       $this->enabled_modules[$row->name]['weight'] = $row->weight; 
-      $this->enabled_modules[$row->name]['status'] = (bool)$row-status;
+      $this->enabled_modules[$row->name]['status'] = (bool)$row->status;
     }
   }
 
