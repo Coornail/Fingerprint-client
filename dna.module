@@ -1,5 +1,7 @@
 <?php
 
+define('DNA_DEFAULT_SERVER', 'http://localhost/dnastore/?q=services/xmlrpc');
+
 /**
  * Implementation of hook_menu()
  */
@@ -15,7 +17,48 @@ function dna_menu() {
     'access arguments' => array(1),
   );
 
+  $items['admin/settings/dna'] = array(
+    'title' => 'Dna configuration',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('dna_settings_form'),
+    'type' => MENU_NORMAL_ITEM,
+    'access arguments' => array('administer site configuration'),
+  );
+
   return $items;
+}
+
+
+/**
+ * System settings form of the module
+ */
+function dna_settings_form($form_state) {
+  $form = array();
+
+  $form['dna_server'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Server'),
+    '#default_value' => variable_get('dna_server', DNA_DEFAULT_SERVER),
+    '#required' => TRUE,
+  );
+
+  $form['dna_domain'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Domain'),
+    '#description' => t('Username'),
+    '#default_value' => variable_get('dna_domain', ''),
+    '#required' => TRUE,
+  );
+
+  $form['dna_key'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Api key'),
+    '#default_value' => variable_get('dna_key', ''),
+    '#required' => TRUE,
+  );
+
+  return system_settings_form($form);
+
 }
 
 
@@ -149,4 +192,28 @@ function dna_access($op, $node, $account) {
   }
 }
 
-?>
+
+/**
+ * @see services_get_hash()
+ */
+function _dna_get_hash($timestamp, $domain, $api_key, $nonce, $method, $args) {
+  $hash_parameters = array($timestamp, $domain, $nonce, $method['method']);
+  foreach ($method['args'] as $key => $arg) {
+    if ($arg['signed'] == TRUE) {
+      if (is_numeric($args[$key]) || !empty($args[$key])) {
+        if (is_array($args[$key]) || is_object($args[$key])) {
+          $hash_parameters[] = serialize($args[$key]);
+        }
+        else{
+          $hash_parameters[] = $args[$key];
+        }
+      }
+      else{
+        $hash_parameters[] = '';
+      }
+    }
+  }
+//  $api_key = db_result(db_query("SELECT kid FROM {services_keys} WHERE domain = '%s'", $domain));
+  return hash_hmac("sha256", implode(';', $hash_parameters), $api_key);
+}
+
