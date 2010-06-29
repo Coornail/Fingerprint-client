@@ -1,0 +1,46 @@
+<?php
+/**
+* @file
+* Tests for dna module
+* 
+* Copyright 2010 by Kornel Lugosi (Coornail)
+* Pronovix
+*/
+
+class dnabasic extends DrupalWebTestCase {
+  var $info;
+  /**
+  * Implementation of getInfo().
+  */
+  public static function getInfo() {
+    return array(
+      'name' => t('Dna'),
+      'description' => t('Tests for dna fingerprint functionality'),
+      'group' => t('Pronovix'),
+    );
+  }
+
+
+  /**
+  * Implementation of setUp().
+  */
+  function setUp() {
+    parent::setUp('dna', 'features');
+  }
+
+
+  /**
+   * Tests a node creation
+   */
+  function testNodeAdd() {
+    $u = $this->drupalCreateUser(array('create dna content'));
+    $this->drupalLogin($u);
+
+    $html = $this->drupalGet('node/add/dna');
+    $edit = array();
+    $this->drupalPost('node/add/dna', $edit, 'Save');
+  }
+
+
+}
+
