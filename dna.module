@@ -62,7 +62,33 @@ function dna_settings_form($form_state) {
 }
 
 
+/**
+ * Sends the node to the Pronovix server
+ *
+ * @todo Check if domain/key is not set
+ */
 function dna_send($node) {
+  $url = variable_get('dna_server', DNA_DEFAULT_SERVER);
+  $domain = variable_get('dna_domain', '');
+  $key = variable_get('dna_key', '');
+  $time = time();
+  $nonce = user_password(); // random string
+
+  module_load_include('inc', 'dna', 'dna_output_xml');
+  $exporter = new dna_xml($node->dna);
+  $node->content['body'] = dna_xml::format_xml($exporter->get_output());
+  unset($node->dna);
+  unset($node->nid);
+
+  $method = array ( 'method' => 'node.save', 'callback' => 'node_service_save', 'access callback' => 'node_service_save_access', 'file' => array ( 'file' => 'inc', 'module' => 'node_service', ), 'args' => array ( 0 => array ( 'name' => 'hash', 'type' => 'string', 'description' => 'A valid API key.', ), 1 => array ( 'name' => 'domain_name', 'type' => 'string', 'description' => 'A valid domain for the API key.', ), 2 => array ( 'name' => 'domain_time_stamp', 'type' => 'string', 'description' => 'Time stamp used to hash key.', ), 3 => array ( 'name' => 'nonce', 'type' => 'string', 'description' => 'One time use nonce also used hash key.', ), 4 => array ( 'name' => 'node', 'type' => 'struct', 'description' => 'A node object. Upon creation, node object must include "type". Upon update, node object must include "nid" and "changed".', 'optional' => false, ), ), 'return' => 'struct', 'help' => 'Save a node object into the database.', 'key' => true, 'auth' => true, );
+
+  $hash = _dna_get_hash($time, $domain, $key, $nonce, $method, $node);
+
+  $xmlrpc = xmlrpc($url, 'node.save', $hash, $domain, $time, $nonce, $node);
+  if (!$xmlrpc) {
+    drupal_set_message(xmlrpc_error_msg());
+  }
+
   return '';
 }
 
@@ -198,22 +224,6 @@ function dna_access($op, $node, $account) {
  */
 function _dna_get_hash($timestamp, $domain, $api_key, $nonce, $method, $args) {
   $hash_parameters = array($timestamp, $domain, $nonce, $method['method']);
-  foreach ($method['args'] as $key => $arg) {
-    if ($arg['signed'] == TRUE) {
-      if (is_numeric($args[$key]) || !empty($args[$key])) {
-        if (is_array($args[$key]) || is_object($args[$key])) {
-          $hash_parameters[] = serialize($args[$key]);
-        }
-        else{
-          $hash_parameters[] = $args[$key];
-        }
-      }
-      else{
-        $hash_parameters[] = '';
-      }
-    }
-  }
-//  $api_key = db_result(db_query("SELECT kid FROM {services_keys} WHERE domain = '%s'", $domain));
   return hash_hmac("sha256", implode(';', $hash_parameters), $api_key);
 }
 
