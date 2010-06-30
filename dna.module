@@ -40,13 +40,13 @@ function dna_settings_form($form_state) {
     '#type' => 'textfield',
     '#title' => t('Server'),
     '#default_value' => variable_get('dna_server', DNA_DEFAULT_SERVER),
+    '#description' => t('If you want to use your own dna store, the following services permissions should be enabled: %permissions', array('%permissions' => 'system.connect, user.login, node.save')),
     '#required' => TRUE,
   );
 
-  $form['dna_domain'] = array(
+  $form['dna_domain'] = array( // We're using the username as the domain as well
     '#type' => 'textfield',
-    '#title' => t('Domain'),
-    '#description' => t('Username'),
+    '#title' => t('Username'),
     '#default_value' => variable_get('dna_domain', ''),
     '#required' => TRUE,
   );
