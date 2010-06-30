@@ -72,7 +72,6 @@ function dna_settings_form($form_state) {
  * Sends the node to the Pronovix server
  *
  * @todo Check if domain/key is not set
- * @todo error handling to xmlrpc_handler
  */
 function dna_send($node) {
   $url = variable_get('dna_server', DNA_DEFAULT_SERVER);
@@ -81,13 +80,24 @@ function dna_send($node) {
   $username = $domain;
   $password = variable_get('dna_password', '');
 
+  if (empty($url) || empty($domain) || empty($key) || empty($password)) {
+    return t('First you have to set up your credentials: !url', array('!url' => l('DNA settings', 'admin/settings/dna')));
+  }
+
   module_load_include('inc', 'dna', 'dna_xmlrpc');
   $xmlrpc_handler = new DrupalXmlrpc($domain, $key, $url);
   $user = $xmlrpc_handler->userLogin($username, $password);
+  if (!$user) {
+    return t('Authentication failed: %message', array('%message' => xmlrpc_error_msg()));
+  }
+
   unset($node->dna);
   unset($node->nid);
   $node->uid = $user->uid;
   $node = $xmlrpc_handler->send('node.save', array($node));
+  if (!$node) {
+    return t('Failed to save node: %message', array('%message' => xmlrpc_error_msg()));
+  }
   
   return '';
 }
