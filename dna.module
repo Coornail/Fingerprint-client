@@ -72,7 +72,7 @@ function dna_settings_form($form_state) {
 /**
  * Sends the node to the Pronovix server
  *
- * @todo Check if domain/key is not set
+ * @todo store remote nid
  */
 function dna_send($node) {
   $url = variable_get('dna_server', DNA_DEFAULT_SERVER);
@@ -100,6 +100,7 @@ function dna_send($node) {
     return t('Failed to save node: %message', array('%message' => xmlrpc_error_msg()));
   }
 
+  // If we own the domain we can provide nice url
   if (strpos($url, DNA_DEFAULT_DOMAIN) !== FALSE) {
     $node_path = DNA_DEFAULT_DOMAIN .'?q=node/'. $node;
     return t('Node saved as !url', array('!url' => l('node/'. $node, $node_path)));
