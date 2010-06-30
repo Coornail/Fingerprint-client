@@ -89,9 +89,7 @@ class DrupalXmlrpc {
     }
   }
 
-  /***************************************************
-  * logout, returns 0 for okay, or -1 for error.
-  */
+
   public function userLogout() {
     $retVal = $this->send( 'user.logout', array() );
     if (!$retVal) {
@@ -100,17 +98,14 @@ class DrupalXmlrpc {
       return FALSE;
     }
 
-    return TRUE; // meaning okay
+    return TRUE;
   }
 
   /***************************************************
   * Function for generating a random string, used for
   * generating a token for the XML-RPC session
   */
-  private function getUniqueCode($length = "") {
-    $code = md5(uniqid(rand(), true));
-    if ($length != "") 
-    return substr($code, 0, $length);
-    else return $code;
+  private function getUniqueCode($length = 10) {
+    return user_password($length);
   }
 }
