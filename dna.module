@@ -14,7 +14,7 @@ function dna_menu() {
     'page callback' => 'dna_send',
     'page arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
-    'access callback' => '_node_is_dna',
+    'access callback' => '_dna_send_permission',
     'access arguments' => array(1),
   );
 
@@ -27,6 +27,11 @@ function dna_menu() {
   );
 
   return $items;
+}
+
+
+function _dna_send_permission($node) {
+  return _node_is_dna($node) && user_access('send dna content trough xmlrpc');
 }
 
 
@@ -210,6 +215,7 @@ function dna_perm() {
     'delete any dna content',
     'edit own dna content',
     'edit any dna content',
+    'send dna content trough xmlrpc',
   );
 }
 
