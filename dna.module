@@ -196,7 +196,7 @@ function dna_nodeapi(&$node, $op, $teaser, $page) {
       $exporter->set_variables(array());
       $exporter->set_enabled_modules(array());
       $node->content['teaser']['#value'] = dna_xml::format_xml($exporter->get_output());
-      $node->content['body'] = '';
+      $node->content['body']['#value'] = '';
     } else {
       $node->content['body']['#value'] = dna_xml::format_xml($exporter->get_output());
     }
