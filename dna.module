@@ -10,7 +10,7 @@ function dna_menu() {
   $items = array();
 
   $items['node/%node/dna_send'] = array(
-    'title' => 'Send to pronvoix',
+    'title' => 'Send to pronovix',
     'page callback' => 'dna_send',
     'page arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
