@@ -31,7 +31,7 @@ function dna_menu() {
 
 
 function _dna_send_permission($node) {
-  return _node_is_dna($node) && user_access('send dna content trough xmlrpc');
+  return _node_is_dna($node) && user_access('send dna content trough xmlrpc') && !module_exists('dna_server');
 }
 
 
