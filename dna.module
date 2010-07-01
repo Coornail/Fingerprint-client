@@ -26,6 +26,17 @@ function dna_menu() {
     'access arguments' => array('administer site configuration'),
   );
 
+  $items['user/%user/site_dna'] = array(
+    'title' => 'Dna credentials',
+    'page callback' => 'site_dna_credentials',
+    'page arguments' => array(1),
+    'access callback' => 'user_edit_access',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'load arguments' => array('%map', '%index'),
+    'file' => 'dna.pages.inc',
+  );
+
   return $items;
 }
 
