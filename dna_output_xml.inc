@@ -85,6 +85,8 @@ class dna_xml extends dna_settings {
    * Tries highlight if geshifilter is enabled
    * Cleans up xml if tidy extension is installed
    *
+   * @todo make this themable by drupal
+   *
    * @return String html output
    */
   public static function format_xml($xml) {
@@ -108,7 +110,7 @@ class dna_xml extends dna_settings {
       return geshifilter_process($xml, 'XML');
     }
 
-    return str_replace("\n", '<br />', htmlspecialchars($xml));
+    return '<pre>'. str_replace("\n", '<br />', htmlspecialchars($xml)) .'</pre>';
   }
 
 }
