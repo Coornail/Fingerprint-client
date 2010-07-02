@@ -101,6 +101,8 @@ function dna_send($node) {
   unset($node->dna);
   unset($node->nid);
   $node->uid = $user->uid;
+  /** @todo check on server also **/
+  $node->status = FALSE;
   $node = $xmlrpc_handler->send('node.save', array($node));
   if (!$node) {
     return t('Failed to save node: %message', array('%message' => xmlrpc_error_msg()));
