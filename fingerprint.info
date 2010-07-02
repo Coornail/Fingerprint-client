@@ -1,4 +1,4 @@
-name = Dna
+name = Fingerprint
 description = Exports a site fingerprint
 core = 6.x
 dependencies[] = features
