@@ -34,7 +34,7 @@ class fingerprintbasic extends DrupalWebTestCase {
    */
   public function testPermissions() {
     // User who has rights to create dumps
-    $fingerprint_user = $this->drupalCreateUser(array('create fingerprint content', 'delete own fingerprint content', 'edit own fingerprint content', 'access fingerprint content'));
+    $fingerprint_user = $this->drupalCreateUser(array('create fingerprint content', 'delete own fingerprint content', 'edit own fingerprint content', 'access own fingerprint content'));
     $this->drupalLogin($fingerprint_user);
 
     // Standard authenticated user, no rights to view fingerprints
