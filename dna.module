@@ -265,10 +265,19 @@ function _dna_get_hash($timestamp, $domain, $api_key, $nonce, $method, $args) {
 /**
  * Implementation of hook_dna_filter().
  *
- * By default it filters the site email address and the drupal_private_key
+ * @todo return an array instead and filter recursively by the module
+ *
+ * By default it filters:
+ * * Site email address
+ * * drupal_private_key
+ * * Fingerprint settings
  */
 function dna_dna_filter(&$dna) {
   $dna['variables']['site_mail'] = DNA_FILTERED_ELEMENT;
   $dna['variables']['drupal_private_key'] = DNA_FILTERED_ELEMENT;
+  $dna['variables']['drupal_private_key'] = DNA_FILTERED_ELEMENT;
+  $dna['variables']['dna_domain'] = DNA_FILTERED_ELEMENT;
+  $dna['variables']['dna_password'] = DNA_FILTERED_ELEMENT;
+  $dna['variables']['dna_key'] = DNA_FILTERED_ELEMENT;
 }
 
