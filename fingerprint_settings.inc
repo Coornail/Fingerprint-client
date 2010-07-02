@@ -1,51 +1,51 @@
 <?php
 
 /**
- * @package dna
- * @file Site dna storage class
+ * @package fingerprint
+ * @file Site fingerprint storage class
  */
 
 // If the storage format changes, make sure to increase!
-define('DNA_VERSION', '0.1');
+define('FINGERPRINT_VERSION', '0.1');
 
-require_once 'dna_output_interface.inc';
+require_once 'fingerprint_output_interface.inc';
 
 /**
  * Retrieves and stores the site settings
  */
-class dna_settings implements dna_output {
+class FingerprintSettings {
   /**
    * @var modules settings
    */
   protected $modules = array();
-  public function get_modules() {return $this->modules;}
-  public function set_modules($modules) {$this->modules = $modules;}
+  public function getModules() {return $this->modules;}
+  public function setModules($modules) {$this->modules = $modules;}
 
   /**
-   * @var variable settings
+   * @var Variable settings
    */
   protected $variables = array();
-  public function get_variables() {return $this->variables;}
-  public function set_variables($variables) {$this->variables = $variables;}
+  public function getVariables() {return $this->variables;}
+  public function setVariables($variables) {$this->variables = $variables;}
 
   /**
-   * @var enabled modules
+   * @var Enabled modules
    */
-  protected $enabled_modules = array();
-  public function get_enabled_modules() {return $this->enabled_modules;}
-  public function set_enabled_modules($enabled_modules) {$this->enabled_modules = $enabled_modules;}
+  protected $enabledModules = array();
+  public function getEnabledModules() {return $this->enabledModules;}
+  public function setEnabledModules($enabledModules) {$this->enabledModules = $enabledModules;}
 
   /**
    * @var timestamp
    */
   protected $timestamp = array();
-  public function get_timestamp() {return $this->timestamp;}
-  public function set_timestamp($timestamp) {$this->timestamp = $timestamp;}
+  public function getTimestamp() {return $this->timestamp;}
+  public function setTimestamp($timestamp) {$this->timestamp = $timestamp;}
 
   /**
    * @var version
    */
-  protected $version = DNA_VERSION;
+  protected $version = FINGERPRINT_VERSION;
 
 
   /**
@@ -55,13 +55,13 @@ class dna_settings implements dna_output {
    */
   function  __construct($settings = array()) {
     if (!empty($settings)) {
-      $this->import_settings($settings);
+      $this->importSettings($settings);
     }
     else {
-      $this->pull_variables();
-      $this->pull_modules();
-      $this->pull_enabled_modules();
-      $this->timestamp = time();
+      $this->pullVariables();
+      $this->pullModules();
+      $this->pullEnabledModules();
+      $this->setTimestamp(time());
     }
   }
 
@@ -69,24 +69,24 @@ class dna_settings implements dna_output {
   /**
    * Imports settings that's exported from get_output_items()
    */
-  protected function import_settings($settings) {
-    if (!isset($settings['export_version']) || $settings['export_version'] != DNA_VERSION) {
-      throw new Exception("Importing version ". $settings['export_version'] .' doesn\'t match current version: '. DNA_VERSION , E_USER_WARNING);
+  protected function importSettings($settings) {
+    if (!isset($settings['export_version']) || $settings['export_version'] != FINGERPRINT_VERSION) {
+      throw new Exception("Importing version ". $settings['export_version'] .' doesn\'t match current version: '. FINGERPRINT_VERSION , E_USER_WARNING);
     }
     if (isset($settings['timestamp'])) {
-      $this->set_timestamp($settings['timestamp']);
+      $this->setTimestamp($settings['timestamp']);
     }
 
     if (isset($settings['variables'])) {
-      $this->set_variables($settings['variables']);
+      $this->setVariables($settings['variables']);
     }
 
     if (isset($settings['modules'])) {
-      $this->set_modules($settings['modules']);
+      $this->setModules($settings['modules']);
     }
 
     if (isset($settings['enabled_modules'])) {
-      $this->set_enabled_modules($settings['enabled_modules']);
+      $this->setEnabledModules($settings['enabled_modules']);
     }
   }
 
@@ -94,12 +94,12 @@ class dna_settings implements dna_output {
   /**
    * Pulls version info about the enabled modules
    */
-  protected function pull_enabled_modules() {
+  protected function pullEnabledModules() {
     $query = db_query('SELECT name, weight, status, info FROM {system}');
     while ($row = db_fetch_object($query)) {
-      $this->enabled_modules[$row->name]['info'] = unserialize($row->info);
-      $this->enabled_modules[$row->name]['weight'] = $row->weight; 
-      $this->enabled_modules[$row->name]['status'] = (bool)$row->status;
+      $this->enabledModules[$row->name]['info'] = unserialize($row->info);
+      $this->enabledModules[$row->name]['weight'] = $row->weight; 
+      $this->enabledModules[$row->name]['status'] = (bool)$row->status;
     }
   }
 
@@ -107,16 +107,16 @@ class dna_settings implements dna_output {
   /**
    * Get all the variables into an internal storage
    */
-  protected function pull_variables() {
+  protected function pullVariables() {
     global $conf;
-    $this->set_variables($conf);
+    $this->setVariables($conf);
   }
 
 
   /**
    * Get all the modules settings into the internal storage
    */
-  protected function pull_modules() {
+  protected function pullModules() {
     module_load_include('inc', 'features', 'features.export');
     features_include();
 
@@ -142,20 +142,20 @@ class dna_settings implements dna_output {
     }
     $export = features_populate($stub, 'test');
     $rendered_hooks = features_export_render_hooks($export, 'test', TRUE);
-    $this->set_modules($this->eval_fingerprint(array_merge_recursive($rendered_hooks, $fingerprint)));
+    $this->setModules($this->evalFingerprint(array_merge_recursive($rendered_hooks, $fingerprint)));
   }
 
 
   /**
    * Evals the elements of the fingerprint to render it as an array
    */
-  public static function eval_fingerprint(Array &$fingerprint) {
+  public static function evalFingerprint(Array &$fingerprint) {
     foreach ($fingerprint as $key => &$element) {
       if (is_string($element)) {
         $fingerprint[$key] = @eval($element);
       }
       else if (is_array($element)) {
-        dna_settings::eval_fingerprint($element);
+        FingerprintSettings::evalFingerprint($element);
       }
     }
     return $fingerprint;
@@ -165,8 +165,8 @@ class dna_settings implements dna_output {
   /**
    * Outputs the settings as a serialized string
    */
-  public function get_output() {
-    $ret = $this->get_output_items();
+  public function getOutput() {
+    $ret = $this->getOutputItems();
     return serialize($ret);
   }
 
@@ -178,12 +178,12 @@ class dna_settings implements dna_output {
    * @param module name
    * @return Mixed Array of the module info, or FALSE if not found
    */
-  public function module_info(String $module) {
-    if (!isset($this->module_info[$module])) {
+  public function moduleInfo(String $module) {
+    if (!isset($this->moduleInfo[$module])) {
       return FALSE;
     }
 
-    return array_merge($this->module_info[$module], $this->modules[$module]);
+    return array_merge($this->moduleInfo[$module], $this->modules[$module]);
   }
 
 
@@ -192,12 +192,12 @@ class dna_settings implements dna_output {
    *
    * @return Array Associative array of the items and the names
    */
-  protected function get_output_items() {
+  protected function getOutputItems() {
     $ret['export_version'] = $this->version;
-    $ret['timestamp'] = $this->get_timestamp();
-    $ret['variables'] = $this->get_variables();
-    $ret['modules'] = $this->get_modules();
-    $ret['enabled_modules'] = $this->get_enabled_modules();
+    $ret['timestamp'] = $this->getTimestamp();
+    $ret['variables'] = $this->getVariables();
+    $ret['modules'] = $this->getModules();
+    $ret['enabled_modules'] = $this->getEnabledModules();
     
     return $ret;
   }
@@ -212,7 +212,7 @@ class dna_settings implements dna_output {
    *
    * @param Class a class object
    */
-  protected static function object_to_array_recursive(&$obj) {
+  protected static function objectToArrayRecursive(&$obj) {
     static $processed_objects = array();
 
     $object_hash = spl_object_hash($obj);
@@ -241,12 +241,11 @@ class dna_settings implements dna_output {
     $arr[$obj_class] = (array)$obj;
     foreach ($arr[$obj_class] as $key => &$item) {
       if (is_object($item)) {
-        dna_settings::object_to_array_recursive($item);
+        FingerprintSettings::objectToArrayRecursive($item);
       }
     }
     $obj = $arr;
     $obj['hash'] = $object_hash;
   }
 
-}
-
+}F

@@ -1,13 +1,12 @@
 <?php
-module_load_include('inc', 'dna', 'dna_settings');
+module_load_include('inc', 'fingerprint', 'fingerprint_settings');
 
 /**
- * @package dna
+ * @package fingerprint
  *
  * Outputs the site settings as xml
  */
-class dna_xml extends dna_settings {
-
+class FingerprintXml {
 
   function __construct($settings = array()) {
     parent::__construct($settings);
@@ -19,8 +18,8 @@ class dna_xml extends dna_settings {
    *
    * Outputs the module info as xml
    */
-  public function get_output() {
-    $ret = $this->get_output_items();
+  public function getOutput() {
+    $ret = $this->getOutputItems();
     $xml = $this->toXML($ret);
 
     // Only domdocument can indent xml, convert
@@ -57,7 +56,7 @@ class dna_xml extends dna_settings {
 
       // __PHP_Incomplete_Class is not is_object(), have to workaround... 
       if (is_object($value) || !(is_int($value) || is_string($value) || is_array($value) || is_bool($value)) ) {
-        dna_settings::object_to_array_recursive($value);
+        FingerprintSettings::objectToArrayRecursive($value);
       }
 
       // replace anything not alpha numeric or '_'
@@ -89,7 +88,7 @@ class dna_xml extends dna_settings {
    *
    * @return String html output
    */
-  public static function format_xml($xml) {
+  public static function formatXml($xml) {
     // Check for broken xml (for example node teaser)
     if (extension_loaded('tidy')) {
       $config = array(
