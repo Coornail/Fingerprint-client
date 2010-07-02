@@ -242,29 +242,30 @@ function fingerprint_perm() {
  * Implementation of hook_access().
  */
 function fingerprint_access($op, $node, $account) {
-  if ($op == 'create') {
-    return user_access('create fingerprint content', $account);
+  switch ($op) {
+    case 'create':
+      return user_access('create fingerprint content', $account);
+    break;
+
+    case 'update':
+      return user_access('edit any fingerprint content', $account) ||
+        (user_access('edit own fingerprint content', $account) && ($account->uid == $node->uid));
+    break;
+
+    case 'delete':
+      return (user_access('delete any fingerprint content', $account) ||
+        (user_access('delete own fingerprint content', $account) && ($account->uid == $node->uid)));
+    break;
+
+    case 'view':
+      return (user_access('access content', $account) && user_access('access fingerprint content', $account));
+    break;
+
+    default:
+      return FALSE;
+    break;
   }
 
-  if ($op == 'update') {
-    if (user_access('edit any fingerprint content', $account) || (user_access('edit own fingerprint content', $account) && ($account->uid == $node->uid))) {
-      return TRUE;
-    }
-  }
-
-  if ($op == 'delete') {
-    if (user_access('delete any fingerprint content', $account) || (user_access('delete own fingerprint content', $account) && ($account->uid == $node->uid))) {
-      return TRUE;
-    }
-  }
-
-  if ($op == 'view') {
-    if (user_access('access content', $account) && user_access('access fingerprint content', $account)) {
-      return TRUE;
-    }
-  }
-
-  return FALSE;
 }
 
 
