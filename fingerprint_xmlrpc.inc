@@ -20,7 +20,7 @@ class FingerprintXmlrpc {
     $this->verbose = $verbose;
 
     // call system.connect to get our required anonymous sessionId:
-    $retVal = $this->send( 'system.connect', array() );
+    $retVal = $this->send('system.connect', array());
     $this->session_id = $retVal['sessid'];
 
     if ($this->verbose) {
@@ -32,6 +32,18 @@ class FingerprintXmlrpc {
         var_dump( $func.' failed to get anonymous session id!' );
       }
     }
+
+  }
+
+
+  /**
+   * Checks if we could connect to the server or not
+   *
+   * @return
+   * TRUE if the connection active FALSE otherwise
+   */
+  public function session_active() {
+    return isset($this->session_id);
   }
 
 
@@ -83,7 +95,7 @@ class FingerprintXmlrpc {
 
       // we might need the user object later, so save it:
       $user = new stdClass();
-      $user = (object)$response['user'];
+      $user = (object)$retVal['user'];
       $this->authenticated_user = $user;
       return $user;
     }
@@ -91,7 +103,7 @@ class FingerprintXmlrpc {
 
 
   public function userLogout() {
-    $retVal = $this->send( 'user.logout', array() );
+    $retVal = $this->send( 'user.logout', array());
     if (!$retVal) {
       if ($this->verbose)
       var_dump( 'userLogout() failed! errno "'.xmlrpc_errno().'" msg "'.xmlrpc_error_msg().'"' );
