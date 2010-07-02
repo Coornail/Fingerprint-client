@@ -1,21 +1,21 @@
 <?php
 /**
 * @file
-* Tests for dna module
+* Tests for fingerprint module
 * 
 * Copyright 2010 by Kornel Lugosi (Coornail)
 * Pronovix
 */
 
-class dnabasic extends DrupalWebTestCase {
+class fingerprintbasic extends DrupalWebTestCase {
   var $info;
   /**
   * Implementation of getInfo().
   */
   public static function getInfo() {
     return array(
-      'name' => t('Dna'),
-      'description' => t('Tests for dna fingerprint functionality'),
+      'name' => t('Fingerprint'),
+      'description' => t('Tests for fingerprint functionality'),
       'group' => t('Pronovix'),
     );
   }
@@ -25,7 +25,7 @@ class dnabasic extends DrupalWebTestCase {
   * Implementation of setUp().
   */
   function setUp() {
-    parent::setUp('dna', 'features');
+    parent::setUp('fingerprint', 'features');
   }
 
 
@@ -33,12 +33,12 @@ class dnabasic extends DrupalWebTestCase {
    * Tests a node creation
    */
   function testNodeAdd() {
-    $u = $this->drupalCreateUser(array('create dna content'));
+    $u = $this->drupalCreateUser(array('create fingerprint content', 'delete own fingerprint content'));
     $this->drupalLogin($u);
 
-    $html = $this->drupalGet('node/add/dna');
+    $html = $this->drupalGet('node/add/fingerprint');
     $edit = array();
-    $this->drupalPost('node/add/dna', $edit, 'Save');
+    $this->drupalPost('node/add/fingerprint', $edit, 'Save');
   }
 
 
