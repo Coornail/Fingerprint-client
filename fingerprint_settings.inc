@@ -8,8 +8,6 @@
 // If the storage format changes, make sure to increase!
 define('FINGERPRINT_VERSION', '0.1');
 
-require_once 'fingerprint_output_interface.inc';
-
 /**
  * Retrieves and stores the site settings
  */
@@ -248,4 +246,5 @@ class FingerprintSettings {
     $obj['hash'] = $object_hash;
   }
 
-}F
+}
+
