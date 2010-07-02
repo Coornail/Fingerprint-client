@@ -253,12 +253,12 @@ function fingerprint_access($op, $node, $account) {
     break;
 
     case 'delete':
-      return (user_access('delete any fingerprint content', $account) ||
-        (user_access('delete own fingerprint content', $account) && ($account->uid == $node->uid)));
+      return user_access('delete any fingerprint content', $account) ||
+        (user_access('delete own fingerprint content', $account) && ($account->uid == $node->uid));
     break;
 
     case 'view':
-      return (user_access('access content', $account) && user_access('access fingerprint content', $account));
+      return user_access('access content', $account) && user_access('access fingerprint content', $account);
     break;
 
     default:
