@@ -3,7 +3,7 @@
  *
  *Originally from drupal.org/node/774298
  */
-class DrupalXmlrpc {
+class FingerprintXmlrpc {
 
   function __construct( $domain = '', $apiKey = '', $endPoint = '', $verbose = FALSE ) {
     // set local domain or IP address
