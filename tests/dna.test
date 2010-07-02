@@ -24,21 +24,66 @@ class fingerprintbasic extends DrupalWebTestCase {
   /**
   * Implementation of setUp().
   */
-  function setUp() {
+  public function setUp() {
     parent::setUp('fingerprint', 'features');
   }
 
 
   /**
-   * Tests a node creation
+   * Tests access permissions
    */
-  function testNodeAdd() {
-    $u = $this->drupalCreateUser(array('create fingerprint content', 'delete own fingerprint content'));
-    $this->drupalLogin($u);
+  public function testPermissions() {
+    // User who has rights to create dumps
+    $fingerprint_user = $this->drupalCreateUser(array('create fingerprint content', 'delete own fingerprint content', 'edit own fingerprint content', 'access fingerprint content'));
+    $this->drupalLogin($fingerprint_user);
 
-    $html = $this->drupalGet('node/add/fingerprint');
-    $edit = array();
-    $this->drupalPost('node/add/fingerprint', $edit, 'Save');
+    // Standard authenticated user, no rights to view fingerprints
+    $non_authorized_user = $this->drupalCreateUser();
+
+    // User saves a dump
+    $this->drupalGet('node/add/fingerprint');
+    $this->assertHttpStatusCode(200);
+    $this->drupalPost('node/add/fingerprint', array(), 'Save');
+
+    // It should not appear on the front page
+    $this->drupalGet('');
+    $this->assertHttpStatusCode(200);
+    $this->assertNoPattern('Site dump');
+
+    // Other user logs in, can't access the dump
+    $this->drupalLogout();
+    $this->drupalLogin($non_authorized_user);
+
+    // It should not appear on the front page
+    $this->drupalGet('');
+    $this->assertHttpStatusCode(200);
+    $this->assertNoPattern('Site dump');
+
+    $this->drupalGet('node/1');
+    $this->assertHttpStatusCode(403);
+
+    // site creator logs back in
+    $this->drupalLogout();
+    $this->drupalLogin($fingerprint_user);
+
+    // User deletes own dump
+    $this->drupalGet('node/1/edit');
+    $this->assertHttpStatusCode(200);
+    $this->drupalPost('node/1/edit', array(), 'Delete');
+  }
+
+
+  /**
+   * Check if the current pages http status code is $status_code
+   */
+  public function assertHttpStatusCode($status_code, $msg = null) {
+    $headers = $this->drupalGetHeaders();
+    $current_status_code = explode(' ', $headers[':status']);
+    $current_status_code = (int)$current_status_code[1];
+    if ($msg === null) {
+      $msg = t('Http status is %status', array('%status' => $status_code));
+    }
+    $this->assertEqual($current_status_code, $status_code, $msg);
   }
 
 
