@@ -91,7 +91,7 @@ function fingerprint_send($node) {
     return t('First you have to set up your credentials: !url', array('!url' => l('Fingerprint settings', 'admin/settings/fingerprint')));
   }
 
-  module_load_include('inc', 'fingerprint', 'FingerprintXmlrpc');
+  module_load_include('inc', 'fingerprint', 'fingerprint_xmlrpc');
   $xmlrpc_handler = new FingerprintXmlrpc($domain, $key, $url);
   $user = $xmlrpc_handler->userLogin($username, $password);
   if (!$user) {
