@@ -6,7 +6,7 @@ module_load_include('inc', 'fingerprint', 'fingerprint_settings');
  *
  * Outputs the site settings as xml
  */
-class FingerprintXml {
+class FingerprintXml extends FingerprintSettings {
 
   function __construct($settings = array()) {
     parent::__construct($settings);
