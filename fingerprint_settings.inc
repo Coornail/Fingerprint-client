@@ -3,7 +3,8 @@
 
 /**
  * @package fingerprint
- * @file Site fingerprint storage class
+ * @file
+ *  Site fingerprint storage class
  */
 
 // If the storage format changes, make sure to increase!
@@ -97,7 +98,7 @@ class FingerprintSettings {
     $query = db_query('SELECT name, weight, status, info FROM {system}');
     while ($row = db_fetch_object($query)) {
       $this->enabledModules[$row->name]['info'] = unserialize($row->info);
-      $this->enabledModules[$row->name]['weight'] = $row->weight; 
+      $this->enabledModules[$row->name]['weight'] = $row->weight;
       $this->enabledModules[$row->name]['status'] = (bool)$row->status;
     }
   }
@@ -197,7 +198,7 @@ class FingerprintSettings {
     $ret['variables'] = $this->getVariables();
     $ret['modules'] = $this->getModules();
     $ret['enabled_modules'] = $this->getEnabledModules();
-    
+
     return $ret;
   }
 
@@ -228,7 +229,7 @@ class FingerprintSettings {
      * When unserialize() called and the class is not in the memory, php
      * doesn't know about the class.
      * Fortunately it saves the class name, so we can still build the array
-     **/
+     */
     if ($obj_class == '__PHP_Incomplete_Class') {
       $obj = (array)$obj;
       $obj_class = $obj['__PHP_Incomplete_Class_Name'];

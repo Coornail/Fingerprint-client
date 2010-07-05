@@ -2,12 +2,12 @@
 // $Id$
 
 /**
-* @file
-* Tests for fingerprint module
-* 
-* Copyright 2010 by Kornel Lugosi (Coornail)
-* Pronovix
-*/
+ * @file
+ *  Tests for fingerprint module
+ *
+ *  Copyright 2010 by Kornel Lugosi (Coornail)
+ *  Pronovix
+ */
 
 class fingerprintbasic extends DrupalWebTestCase {
   var $info;

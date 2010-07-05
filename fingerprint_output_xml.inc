@@ -2,7 +2,8 @@
 // $Id$
 
 /**
- * @file XML Otput plugin for fingerprint module
+ * @file
+ *  XML Otput plugin for fingerprint module
  */
 
 module_load_include('inc', 'fingerprint', 'fingerprint_settings');
@@ -31,7 +32,7 @@ class FingerprintXml extends FingerprintSettings {
     // Only domdocument can indent xml, convert
     $dom = dom_import_simplexml($xml)->ownerDocument;
     $dom->formatOutput = TRUE;
-    return $dom->saveXML(); 
+    return $dom->saveXML();
   }
 
 
@@ -51,16 +52,16 @@ class FingerprintXml extends FingerprintSettings {
     }
 
     foreach ($data as $key => $value) {
-       if (empty($value)) {
-         continue;
-       }
+      if (empty($value)) {
+        continue;
+      }
 
       // no numeric keys
       if (is_numeric($key)) {
         $key = 'element';
       }
 
-      // __PHP_Incomplete_Class is not is_object(), have to workaround... 
+      // __PHP_Incomplete_Class is not is_object(), have to workaround...
       if (is_object($value) || !(is_int($value) || is_string($value) || is_array($value) || is_bool($value)) ) {
         FingerprintSettings::objectToArrayRecursive($value);
       }
@@ -86,7 +87,7 @@ class FingerprintXml extends FingerprintSettings {
 
   /**
    * Formats and highlights xml
-   * 
+   *
    * Tries highlight if geshifilter is enabled
    * Cleans up xml if tidy extension is installed
    *

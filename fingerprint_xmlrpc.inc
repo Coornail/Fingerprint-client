@@ -2,7 +2,8 @@
 // $Id$
 
 /**
- * @file XMLRPC handler class for the fingerprint module
+ * @file
+ *  XMLRPC handler class for the fingerprint module
  * Originally from drupal.org/node/774298
  */
 class FingerprintXmlrpc {
@@ -29,7 +30,7 @@ class FingerprintXmlrpc {
       $func = 'DrupalXmlrpc->__construct:';
       if ($this->session_id) {
         var_dump($func .' got anonymous session id fine');
-      } 
+      }
       else{
         var_dump($func .' failed to get anonymous session id!');
       }
