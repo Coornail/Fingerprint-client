@@ -299,3 +299,17 @@ function fingerprint_fingerprint_filter(&$fingerprint) {
   $fingerprint['variables']['fingerprint_key'] = FINGERPRINT_FILTERED_ELEMENT;
 }
 
+
+/**
+ * Implementation of hook_help().
+ */
+function fingerprint_help($path, $arg) {
+  switch($path) {
+    case 'admin/settings/fingerprint':
+      return '<p>'. t('These configurations are only matter if you want to send your fingerprint to an another website.') . '<br />'
+        . t('If you do so, you can check if your settings working at every fingerprint node using the "Send to Pronovix" tab') .'<br />'
+        . t('Else you can ignore these settings and start creating a fingerprint at !url', array('!url' => l('Create site fingerprint', 'node/add/fingerprint'))) .'</p>';
+  }
+
+}
+
