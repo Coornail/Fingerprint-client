@@ -1,4 +1,10 @@
 <?php
+// $Id$
+
+/**
+ * @file XML Otput plugin for fingerprint module
+ */
+
 module_load_include('inc', 'fingerprint', 'fingerprint_settings');
 
 /**
@@ -34,13 +40,13 @@ class FingerprintXml extends FingerprintSettings {
    *
    * mostly copied from http://snipplr.com/view.php?codeview&id=3491
    */
-  private function toXML(array $data, $rootNodeName = 'data', $xml = null) {
+  private function toXML(array $data, $rootNodeName = 'data', $xml = NULL) {
     // turn off compatibility mode as simple xml throws a wobbly if you don't.
     if (ini_get('zend.ze1_compatibility_mode') == 1) {
       ini_set('zend.ze1_compatibility_mode', 0);
     }
 
-    if ($xml == null) {
+    if ($xml == NULL) {
       $xml = simplexml_load_string('<?xml version="1.0" encoding="utf-8"?><'. $rootNodeName .' /> ');
     }
 
@@ -92,10 +98,10 @@ class FingerprintXml extends FingerprintSettings {
     // Check for broken xml (for example node teaser)
     if (extension_loaded('tidy')) {
       $config = array(
-        'indent'         => true,
-        'output-xml'     => true,
-        'input-xml'     => true,
-        'wrap'         => '1000'
+        'indent' => TRUE,
+        'output-xml' => TRUE,
+        'input-xml' => TRUE,
+        'wrap' => '1000'
       );
 
       $tidy = new tidy();

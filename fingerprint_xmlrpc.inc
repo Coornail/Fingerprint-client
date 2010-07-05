@@ -1,7 +1,9 @@
 <?php
+// $Id$
+
 /**
- *
- *Originally from drupal.org/node/774298
+ * @file XMLRPC handler class for the fingerprint module
+ * Originally from drupal.org/node/774298
  */
 class FingerprintXmlrpc {
 
@@ -26,10 +28,10 @@ class FingerprintXmlrpc {
     if ($this->verbose) {
       $func = 'DrupalXmlrpc->__construct:';
       if ($this->session_id) {
-        var_dump( $func.' got anonymous session id fine' );
+        var_dump($func .' got anonymous session id fine');
       } 
       else{
-        var_dump( $func.' failed to get anonymous session id!' );
+        var_dump($func .' failed to get anonymous session id!');
       }
     }
 
@@ -78,7 +80,7 @@ class FingerprintXmlrpc {
   */
   public function userLogin($userName = '', $userPass = '') {
     if ($this->verbose)
-      var_dump( 'DrupalXmlrpc->userLogin() called with userName "'.$userName.'" and pass "'.$userPass.'"' );
+      var_dump('DrupalXmlrpc->userLogin() called with userName "'. $userName .'" and pass "'. $userPass .'"');
 
     // clear out any lingering xmlrpc errors:
     xmlrpc_error( NULL, NULL, TRUE );
@@ -86,7 +88,7 @@ class FingerprintXmlrpc {
     $retVal = $this->send('user.login', array($userName, $userPass));
     if (!$retVal && xmlrpc_errno()) {
       if ($this->verbose)
-        var_dump( 'userLogin() failed! errno "'.xmlrpc_errno().'" msg "'.xmlrpc_error_msg().'"' );
+        var_dump('userLogin() failed! errno "'. xmlrpc_errno() .'" msg "'. xmlrpc_error_msg() .'"');
       return FALSE;
     }
     else {
@@ -106,7 +108,7 @@ class FingerprintXmlrpc {
     $retVal = $this->send( 'user.logout', array());
     if (!$retVal) {
       if ($this->verbose)
-      var_dump( 'userLogout() failed! errno "'.xmlrpc_errno().'" msg "'.xmlrpc_error_msg().'"' );
+      var_dump('userLogout() failed! errno "'. xmlrpc_errno() .'" msg "'. xmlrpc_error_msg() .'"');
       return FALSE;
     }
 

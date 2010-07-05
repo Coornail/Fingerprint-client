@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 /**
  * @package fingerprint
@@ -152,7 +153,7 @@ class FingerprintSettings {
       if (is_string($element)) {
         $fingerprint[$key] = @eval($element);
       }
-      else if (is_array($element)) {
+      elseif (is_array($element)) {
         FingerprintSettings::evalFingerprint($element);
       }
     }

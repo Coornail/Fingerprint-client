@@ -214,7 +214,8 @@ function fingerprint_nodeapi(&$node, $op, $teaser, $page) {
       $exporter->setEnabledModules(array());
       $node->content['teaser']['#value'] = FingerprintXml::formatXml($exporter->getOutput());
       $node->content['body']['#value'] = '';
-    } else {
+    }
+    else {
       $node->content['body']['#value'] = FingerprintXml::formatXml($exporter->getOutput());
     }
   }
@@ -304,7 +305,7 @@ function fingerprint_fingerprint_filter(&$fingerprint) {
  * Implementation of hook_help().
  */
 function fingerprint_help($path, $arg) {
-  switch($path) {
+  switch ($path) {
     case 'admin/settings/fingerprint':
       return '<p>'. t('These configurations are only matter if you want to send your fingerprint to an another website.') . '<br />'
         . t('If you do so, you can check if your settings working at every fingerprint node using the "Send to Pronovix" tab') .'<br />'
