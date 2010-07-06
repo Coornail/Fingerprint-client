@@ -148,8 +148,7 @@ function fingerprint_send($node) {
 /**
  * Checks if the node type is fingerprint
  *
- * @return bool True if it's a fingerprint site dump, else otherwise
- *
+ * @return bool True if it's a fingerprint site dump, false otherwise
  */
 function _node_is_fingerprint($node) {
   return $node->type == 'fingerprint';
