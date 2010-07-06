@@ -297,15 +297,6 @@ function fingerprint_access($op, $node, $account) {
 
 
 /**
- * @see services_get_hash()
- */
-function _fingerprint_get_hash($timestamp, $domain, $api_key, $nonce, $method, $args) {
-  $hash_parameters = array($timestamp, $domain, $nonce, $method);
-  return hash_hmac("sha256", implode(';', $hash_parameters), $api_key);
-}
-
-
-/**
  * Implementation of hook_fingerprint_filter().
  *
  * @todo return an array instead and filter recursively by the module
