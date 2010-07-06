@@ -31,4 +31,6 @@ function fingerprint_schema() {
  */
 function fingerprint_install() {
   drupal_install_schema('fingerprint');
+  // By default, only 'published' is checked
+  variable_set('node_options_fingerprint', array('status'));
 }
