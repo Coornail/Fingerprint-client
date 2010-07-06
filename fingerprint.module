@@ -105,7 +105,6 @@ function fingerprint_nodeapi(&$node, $op, $teaser, $page) {
   if ($op == 'load') {
     $node->fingerprint = unserialize($node->body);
     fingerprint_filter_invoke(&$node);
-
     $node->fingerprint_remote_nid = db_result(db_query('SELECT remote_nid FROM {fingerprint} WHERE nid=%d', $node->nid));
   }
 
@@ -242,7 +241,7 @@ function _fingerprint_filter(&$tree, $filter) {
     if (is_array($node)) {
       _fingerprint_filter(&$tree[$key], $filter[$key]);
     } else {
-      if (is_array($tree[$node])) {
+      if (isset($tree[$node]) && is_array($tree[$node])) {
         _fingerprint_filter_all(&$tree[$node]);
       } else {
         $tree[$node] = FINGERPRINT_FILTERED_ELEMENT;
