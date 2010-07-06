@@ -213,10 +213,13 @@ function fingerprint_help($path, $arg) {
 
 }
 
+
 /**
  * Hook for fingerprint filtering.
- * Ever exportable that you don't want to displayed should be set to
- * FINGERPRINT_FILTERED_ELEMENT constant in the tree (site email, etc).
+ *
+ * hook_fingerprint_filter() should return a tree, with the leafs to filter
+ * @see fingerprint_fingerprint_filter()
+ *
  * @todo Create an interface so the user can do it dynamically
  */
 function fingerprint_filter_invoke(&$node) {
@@ -224,5 +227,23 @@ function fingerprint_filter_invoke(&$node) {
   foreach (module_implements('fingerprint_filter') as $module) {
     $function = $module .'_fingerprint_filter';
     $filter += $function();
+  }
+
+  _fingerprint_filter(&$node->fingerprint, $filter);
+}
+
+
+/**
+ * Filters a tree recursively
+ * @see fingerprint_filter_invoke
+ * @todo if $tree[$leaf] is array, filter it all the way down
+ */
+function _fingerprint_filter(&$tree, $filter) {
+  foreach ($filter as $key => &$leaf) {
+    if (is_array($leaf)) {
+      _fingerprint_filter(&$tree[$key], $filter[$key]);
+    } else {
+      $tree[$leaf] = FINGERPRINT_FILTERED_ELEMENT;
+    }
   }
 }
