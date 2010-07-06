@@ -188,7 +188,7 @@ function fingerprint_access($op, $node, $account) {
     break;
 
     case 'view':
-      return user_access('acess any fingerprint content', $account) ||
+      return user_access('access any fingerprint content', $account) ||
         (user_access('access own fingerprint content', $account) && ($account->uid == $node->uid));
     break;
 
