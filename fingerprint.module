@@ -102,9 +102,6 @@ function fingerprint_nodeapi(&$node, $op, $teaser, $page) {
     return;
   }
 
-  /**
-   * Save the fingerprint before the html filter screws it up
-   */
   if ($op == 'load') {
     $node->fingerprint = unserialize($node->body);
     /**
