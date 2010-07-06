@@ -104,16 +104,7 @@ function fingerprint_nodeapi(&$node, $op, $teaser, $page) {
 
   if ($op == 'load') {
     $node->fingerprint = unserialize($node->body);
-    /**
-     * This is the hook for filtering.
-     * Ever exportable that you don't want to displayed should be set to
-     * FINGERPRINT_FILTERED_ELEMENT constant in the tree (site email, etc).
-     * @todo Create an interface so the user can do it dynamically
-     */
-    foreach (module_implements('fingerprint_filter') as $module) {
-      $function = $module .'_fingerprint_filter';
-      $function(&$node->fingerprint);
-    }
+    fingerprint_filter_invoke(&$node);
 
     $node->fingerprint_remote_nid = db_result(db_query('SELECT remote_nid FROM {fingerprint} WHERE nid=%d', $node->nid));
   }
@@ -219,3 +210,15 @@ function fingerprint_help($path, $arg) {
 
 }
 
+/**
+ * Hook for fingerprint filtering.
+ * Ever exportable that you don't want to displayed should be set to
+ * FINGERPRINT_FILTERED_ELEMENT constant in the tree (site email, etc).
+ * @todo Create an interface so the user can do it dynamically
+ */
+function fingerprint_filter_invoke(&$node) {
+  foreach (module_implements('fingerprint_filter') as $module) {
+    $function = $module .'_fingerprint_filter';
+    $function(&$node->fingerprint);
+  }
+}
