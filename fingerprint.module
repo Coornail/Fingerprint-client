@@ -127,7 +127,6 @@ function fingerprint_send($node) {
     return t('Node saved as !url', array('!url' => l('remote_node/'. $remote_node, $remote_node_path)));
   }
 
-
   return t('Node saved as node/%nid', array('%nid' => $remote_node));
 }
 
@@ -212,6 +211,8 @@ function fingerprint_nodeapi(&$node, $op, $teaser, $page) {
       $function = $module .'_fingerprint_filter';
       $function(&$node->fingerprint);
     }
+
+    $node->fingerprint_remote_nid = db_result(db_query('SELECT remote_nid FROM {fingerprint} WHERE nid=%d', $node->nid));
   }
 
   if ($op == 'view') {
