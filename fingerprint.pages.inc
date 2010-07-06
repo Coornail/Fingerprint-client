@@ -130,13 +130,20 @@ function fingerprint_diff_list($node) {
 }
 
 
-
+/**
+ * Shows the difference between two fingerprint node
+ *
+ * @param $current int Current node id
+ * @param $other int Other node id
+ */
 function fingerprint_view_diff($current, $other) {
   $current = node_load($current);
   $other = node_load($other);
 
+  // Emulate node render
   fingerprint_nodeapi(&$current, 'view', NULL, NULL, FINGERPRINT_NOHIGHLIGHT);
   fingerprint_nodeapi(&$other, 'view', NULL, NULL, FINGERPRINT_NOHIGHLIGHT);
+  // Decoding '<' and '>' chars so it can be decoded
   $current->body = htmlspecialchars_decode($current->content['body']['#value']);
   $other->body = htmlspecialchars_decode($other->content['body']['#value']);
 
@@ -144,6 +151,7 @@ function fingerprint_view_diff($current, $other) {
   $rows = _diff_body_rows($other, $current);
   $cols = _diff_default_cols();
   $header = _diff_default_header();
+
   return theme('diff_table', $header, $rows, array('class' => 'diff'), NULL, $cols);
 }
 
