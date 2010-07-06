@@ -42,8 +42,8 @@ class FingerprintXmlrpc {
   /**
    * Checks if we could connect to the server or not
    *
-   * @return
-   * TRUE if the connection active FALSE otherwise
+   * @return bool
+   *  TRUE if the connection active FALSE otherwise
    */
   public function session_active() {
     return isset($this->session_id);
