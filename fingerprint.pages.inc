@@ -136,6 +136,7 @@ function fingerprint_diff_list($node) {
  * @param $current int Current node id
  * @param $other int Other node id
  * @todo handle drupal_set_title in menu hook
+ * @todo remove recursive references (since the hash will always be a difference)
  */
 function fingerprint_view_diff($current, $other) {
   $current = node_load($current);
