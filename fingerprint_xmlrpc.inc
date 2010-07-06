@@ -3,8 +3,8 @@
 
 /**
  * @file
- *  XMLRPC handler class for the fingerprint module
- * Originally from drupal.org/node/774298
+ *   XMLRPC handler class for the fingerprint module
+ *   Originally from drupal.org/node/774298
  */
 class FingerprintXmlrpc {
 
@@ -43,17 +43,24 @@ class FingerprintXmlrpc {
    * Checks if we could connect to the server or not
    *
    * @return bool
-   *  TRUE if the connection active FALSE otherwise
+   *   TRUE if the connection active FALSE otherwise
    */
   public function session_active() {
     return isset($this->session_id);
   }
 
 
-  /***********************************************************************
-  * Function for sending xmlrpc requests
-  */
-  public function send( $methodName, $functionArgs = array() ) {
+  /**
+   * Function for sending xmlrpc requests
+   *
+   * @param methodName
+   *   String xmlrpc method name
+   * @param functionArgs
+   *   Array Additional arguments in an array
+   * @return
+   *   Mixed xmlrpc response
+   */
+  public function send($methodName, $functionArgs = array()) {
     $protocolArgs = array();
     // only the system.connect method does not require a sessionId:
     if ($methodName == 'system.connect') {
@@ -61,24 +68,32 @@ class FingerprintXmlrpc {
     }
     else {
       $timestamp = (string)time();
-      $nonce = $this->getUniqueCode("10");
+      $nonce = $this->getUniqueCode(10);
 
       // prepare a hash
-      $hash_parameters = array( $timestamp, $this->domain, $nonce, $methodName );
+      $hash_parameters = array($timestamp, $this->domain, $nonce, $methodName);
       $hash = hash_hmac("sha256", implode(';', $hash_parameters), $this->kid);
 
       // prepared the arguments for this service:
       // note, the sessid needs to be the one returned by user.login
-      $protocolArgs = array( $this->endpoint, $methodName, $hash, $this->domain, $timestamp, $nonce, $this->session_id );
+      $protocolArgs = array($this->endpoint, $methodName, $hash, $this->domain, $timestamp, $nonce, $this->session_id);
     }
 
-    $params = array_merge( $protocolArgs, $functionArgs );
+    $params = array_merge($protocolArgs, $functionArgs);
     return call_user_func_array('xmlrpc', $params);
   }
 
-  /***************************************************
-  * login and return user object
-  */
+
+  /**
+   * login and return user object
+   *
+   * @param $userName
+   *   String Remote user name
+   * @param $userPass
+   *   String Remote user password
+   * @return
+   *   Mixed, The user object if login succesfull, else FALSE
+   */
   public function userLogin($userName = '', $userPass = '') {
     if ($this->verbose)
       var_dump('DrupalXmlrpc->userLogin() called with userName "'. $userName .'" and pass "'. $userPass .'"');
@@ -116,10 +131,11 @@ class FingerprintXmlrpc {
     return TRUE;
   }
 
-  /***************************************************
-  * Function for generating a random string, used for
-  * generating a token for the XML-RPC session
-  */
+
+  /**
+   * Function for generating a random string, used for
+   * generating a token for the XML-RPC session
+   */
   private function getUniqueCode($length = 10) {
     return user_password($length);
   }
