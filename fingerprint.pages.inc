@@ -141,7 +141,7 @@ function fingerprint_view_diff($current, $other) {
   $other->body = htmlspecialchars_decode($other->content['body']['#value']);
 
   module_load_include('inc', 'diff', 'diff.pages');
-  $rows = _diff_body_rows($current, $other);
+  $rows = _diff_body_rows($other, $current);
   $cols = _diff_default_cols();
   $header = _diff_default_header();
   return theme('diff_table', $header, $rows, array('class' => 'diff'), NULL, $cols);
