@@ -32,6 +32,24 @@ function fingerprint_menu() {
     'file' => 'fingerprint.pages.inc',
   );
 
+  $items['node/%node/fingerprint_diff'] = array(
+    'title' => 'Difference between versions',
+    'page callback' => 'fingerprint_diff_list',
+    'page arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'access arguments' => array('administer site configuration'),
+    'file' => 'fingerprint.pages.inc',
+  );
+
+  $items['node/%/fingerprint_diff/%'] = array(
+    'title' => 'Difference between versions',
+    'page callback' => 'fingerprint_view_diff',
+    'page arguments' => array(1, 3),
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('administer site configuration'),
+    'file' => 'fingerprint.pages.inc',
+  );
+
   return $items;
 }
 

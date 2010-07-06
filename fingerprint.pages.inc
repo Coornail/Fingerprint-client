@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Sends the node to the Pronovix server
  * Callback for node/%node/fingerprint_send
@@ -109,5 +110,40 @@ function fingerprint_settings_form($form_state) {
   );
 
   return system_settings_form($form);
+}
+
+
+/**
+ * Lists nodes that the current node can be diffed for
+ *
+ * Callback for node/%node/fingerprint_diff
+ */
+function fingerprint_diff_list($node) {
+  $other_nodes = array();
+
+  $result = db_query('SELECT nid, title FROM {node} WHERE type="fingerprint" AND nid<>%d', $node->nid);
+  while ($other_node= db_fetch_object($result)) {
+    $other_nodes[] = l($other_node->title, 'node/'. $node->nid .'/fingerprint_diff/'. $other_node->nid);
+  }
+
+  return theme('item_list', $other_nodes);
+}
+
+
+
+function fingerprint_view_diff($current, $other) {
+  $current = node_load($current);
+  $other = node_load($other);
+
+  fingerprint_nodeapi(&$current, 'view', NULL, NULL, FINGERPRINT_NOHIGHLIGHT);
+  fingerprint_nodeapi(&$other, 'view', NULL, NULL, FINGERPRINT_NOHIGHLIGHT);
+  $current->body = htmlspecialchars_decode($current->content['body']['#value']);
+  $other->body = htmlspecialchars_decode($other->content['body']['#value']);
+
+  module_load_include('inc', 'diff', 'diff.pages');
+  $rows = _diff_body_rows($current, $other);
+  $cols = _diff_default_cols();
+  $header = _diff_default_header();
+  return theme('diff_table', $header, $rows, array('class' => 'diff'), NULL, $cols);
 }
 
