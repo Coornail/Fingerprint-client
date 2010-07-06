@@ -239,11 +239,11 @@ function fingerprint_filter_invoke(&$node) {
  * @todo if $tree[$leaf] is array, filter it all the way down
  */
 function _fingerprint_filter(&$tree, $filter) {
-  foreach ($filter as $key => &$leaf) {
-    if (is_array($leaf)) {
+  foreach ($filter as $key => &$node) {
+    if (is_array($node)) {
       _fingerprint_filter(&$tree[$key], $filter[$key]);
     } else {
-      $tree[$leaf] = FINGERPRINT_FILTERED_ELEMENT;
+      $tree[$node] = FINGERPRINT_FILTERED_ELEMENT;
     }
   }
 }
