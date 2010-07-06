@@ -102,23 +102,33 @@ function fingerprint_send($node) {
     return t('Authentication failed: %message', array('%message' => xmlrpc_error_msg()));
   }
 
+  // we'll need it later
+  $nid = $node->nid;
+
   unset($node->fingerprint);
   unset($node->nid);
   $node->uid = $user->uid;
   /** @todo check on server also **/
   $node->status = FALSE;
-  $node = $xmlrpc_handler->send('node.save', array($node));
-  if (!$node) {
-    return t('Failed to save node: %message', array('%message' => xmlrpc_error_msg()));
+  $remote_node = $xmlrpc_handler->send('node.save', array($node));
+  if (!$remote_node) {
+    return t('Failed to save remote_node: %message', array('%message' => xmlrpc_error_msg()));
   }
+
+  // Write remote nid to the database
+  $remote_nid = new StdClass();
+  $remote_nid->nid = $nid;
+  $remote_nid->remote_nid = $remote_node;
+  $ret = drupal_write_record('fingerprint', $remote_nid, 'nid');
 
   // If we own the domain we can provide nice url
   if (strpos($url, FINGERPRINT_DEFAULT_DOMAIN) !== FALSE) {
-    $node_path = FINGERPRINT_DEFAULT_DOMAIN .'?q=node/'. $node;
-    return t('Node saved as !url', array('!url' => l('node/'. $node, $node_path)));
+    $remote_node_path = FINGERPRINT_DEFAULT_DOMAIN .'?q=remote_node/'. $remote_node;
+    return t('Node saved as !url', array('!url' => l('remote_node/'. $remote_node, $remote_node_path)));
   }
 
-  return t('Node saved as node/%nid', array('%nid' => $node));
+
+  return t('Node saved as node/%nid', array('%nid' => $remote_node));
 }
 
 
