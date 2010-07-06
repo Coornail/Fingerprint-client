@@ -6,7 +6,7 @@
 function fingerprint_schema() {
   $schema = array();
   $schema['fingerprint'] = array(
-    'description' => t('Storesthe remote nodeid to our nid'),
+    'description' => t('Stores the remote nodeid to our nid'),
     'fields' => array(
       'nid' => array(
         'description' => t('Local node id'),
