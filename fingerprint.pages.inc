@@ -135,10 +135,13 @@ function fingerprint_diff_list($node) {
  *
  * @param $current int Current node id
  * @param $other int Other node id
+ * @todo handle drupal_set_title in menu hook
  */
 function fingerprint_view_diff($current, $other) {
   $current = node_load($current);
   $other = node_load($other);
+
+  drupal_set_title(t('Difference between "@current_title" and "@other_title"', array('@current_title' => $current->title, '@other_title' => $other->title)));
 
   // Emulate node render
   fingerprint_nodeapi(&$current, 'view', NULL, NULL, FINGERPRINT_NOHIGHLIGHT);
