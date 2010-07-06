@@ -77,8 +77,6 @@ function fingerprint_settings_form($form_state) {
 
 /**
  * Sends the node to the Pronovix server
- *
- * @todo store remote nid
  */
 function fingerprint_send($node) {
   $url = variable_get('fingerprint_server', FINGERPRINT_DEFAULT_SERVER);
