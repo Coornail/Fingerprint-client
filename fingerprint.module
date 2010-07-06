@@ -116,7 +116,6 @@ function fingerprint_send($node) {
 
 
   $node->uid = $user->uid;
-  /** @todo check on server also **/
   $node->status = FALSE;
   $remote_node = $xmlrpc_handler->send('node.save', array($node));
   if (!$remote_node) {
