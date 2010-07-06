@@ -106,20 +106,37 @@ function fingerprint_send($node) {
   $nid = $node->nid;
 
   unset($node->fingerprint);
-  unset($node->nid);
+  /**
+   * If we heaven't saved the node yet, we'll create a new one
+   * For that we have to remove the nid, else we'll just update
+   */
+  if ($node->fingerprint_remote_nid === FALSE) {
+    unset($node->nid);
+  }
+  // Have to set changed, else the version on the other server will be never, and node can't be saved
+  $node->changed = time();
+
+
   $node->uid = $user->uid;
   /** @todo check on server also **/
   $node->status = FALSE;
   $remote_node = $xmlrpc_handler->send('node.save', array($node));
   if (!$remote_node) {
-    return t('Failed to save remote_node: %message', array('%message' => xmlrpc_error_msg()));
+    return t('Failed to save node: %message', array('%message' => xmlrpc_error_msg()));
   }
 
   // Write remote nid to the database
   $remote_nid = new StdClass();
   $remote_nid->nid = $nid;
   $remote_nid->remote_nid = $remote_node;
-  $ret = drupal_write_record('fingerprint', $remote_nid, 'nid');
+
+  // If remote_nid is not set, we insert, else we update
+  if ($node->fingerprint_remote_nid == FALSE) {
+    $update = array();
+  } else {
+    $update = array('nid');
+  }
+  drupal_write_record('fingerprint', $remote_nid, $update);
 
   // If we own the domain we can provide nice url
   if (strpos($url, FINGERPRINT_DEFAULT_DOMAIN) !== FALSE) {
