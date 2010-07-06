@@ -4,6 +4,9 @@ define('FINGERPRINT_DEFAULT_DOMAIN', 'http://localhost/dnastore/');
 define('FINGERPRINT_DEFAULT_SERVER', FINGERPRINT_DEFAULT_DOMAIN .'?q=services/xmlrpc');
 define('FINGERPRINT_FILTERED_ELEMENT', '[FILTERED]');
 
+define('FINGERPRINT_HIGHLIGHT', TRUE);
+define('FINGERPRINT_NOHIGHLIGHT', FALSE);
+
 /**
  * Implementation of hook_menu().
  */
@@ -97,7 +100,7 @@ function fingerprint_form(&$node) {
  *
  * @todo make the node load and display nicer
  */
-function fingerprint_nodeapi(&$node, $op, $teaser, $page) {
+function fingerprint_nodeapi(&$node, $op, $teaser, $page, $highlight = TRUE) {
   if ($node->type != 'fingerprint') {
     return;
   }
@@ -116,11 +119,11 @@ function fingerprint_nodeapi(&$node, $op, $teaser, $page) {
       $exporter->setModules(array());
       $exporter->setVariables(array());
       $exporter->setEnabledModules(array());
-      $node->content['teaser']['#value'] = FingerprintXml::formatXml($exporter->getOutput());
+      $node->content['teaser']['#value'] = FingerprintXml::formatXml($exporter->getOutput(), $highlight);
       $node->content['body']['#value'] = '';
     }
     else {
-      $node->content['body']['#value'] = FingerprintXml::formatXml($exporter->getOutput());
+      $node->content['body']['#value'] = FingerprintXml::formatXml($exporter->getOutput(), $highlight);
     }
   }
 

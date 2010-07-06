@@ -95,7 +95,7 @@ class FingerprintXml extends FingerprintSettings {
    *
    * @return String html output
    */
-  public static function formatXml($xml) {
+  public static function formatXml($xml, $highlight = TRUE) {
     // Check for broken xml (for example node teaser)
     if (extension_loaded('tidy')) {
       $config = array(
@@ -111,12 +111,12 @@ class FingerprintXml extends FingerprintSettings {
       $xml = tidy_get_output($tidy);
     }
 
-    if (module_exists('geshifilter')) {
+    if (module_exists('geshifilter') && $highlight) {
       require_once drupal_get_path('module', 'geshifilter') .'/geshifilter.pages.inc';
       return geshifilter_process($xml, 'XML');
     }
 
-    return '<pre>'. str_replace("\n", '<br />', htmlspecialchars($xml)) .'</pre>';
+    return '<pre>'. str_replace("\n", "<br />\n", htmlspecialchars($xml)) .'</pre>';
   }
 
 }
