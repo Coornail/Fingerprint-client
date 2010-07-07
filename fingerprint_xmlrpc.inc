@@ -31,7 +31,7 @@ class FingerprintXmlrpc {
       if ($this->session_id) {
         var_dump($func .' got anonymous session id fine');
       }
-      else{
+      else {
         var_dump($func .' failed to get anonymous session id!');
       }
     }

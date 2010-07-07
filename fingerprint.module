@@ -258,16 +258,18 @@ function fingerprint_filter_invoke(&$node) {
 
 /**
  * Filters a tree recursively
- * @see fingerprint_filter_invoke
+ * @see fingerprint_filter_invoke()
  */
 function _fingerprint_filter(&$tree, $filter) {
   foreach ($filter as $key => &$node) {
     if (is_array($node)) {
       _fingerprint_filter(&$tree[$key], $filter[$key]);
-    } else {
+    }
+    else {
       if (isset($tree[$node]) && is_array($tree[$node])) {
         _fingerprint_filter_all(&$tree[$node]);
-      } else {
+      }
+      else {
         $tree[$node] = FINGERPRINT_FILTERED_ELEMENT;
       }
     }
@@ -279,10 +281,11 @@ function _fingerprint_filter(&$tree, $filter) {
  * Filters all leaf in a node
  */
 function _fingerprint_filter_all(&$tree) {
-  foreach($tree as $key => &$node) {
+  foreach ($tree as $key => &$node) {
     if (is_array($node)) {
       _fingerprint_filter_all($node);
-    } else {
+    }
+    else {
       $tree[$key] = FINGERPRINT_FILTERED_ELEMENT;
     }
   }

@@ -1,5 +1,10 @@
 <?php
+// $Id$
 
+/**
+ * @file
+ *   Fingerprint page callbacks
+ */
 
 /**
  * Sends the node to the Pronovix server
@@ -50,14 +55,15 @@ function fingerprint_send($node) {
   }
 
   // Write remote nid to the database
-  $remote_nid = new StdClass();
+  $remote_nid = new stdClass();
   $remote_nid->nid = $nid;
   $remote_nid->remote_nid = $remote_node;
 
   // If remote_nid is not set, we insert, else we update
   if ($node->fingerprint_remote_nid == FALSE) {
     $update = array();
-  } else {
+  }
+  else {
     $update = array('nid');
   }
   drupal_write_record('fingerprint', $remote_nid, $update);

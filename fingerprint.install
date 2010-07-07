@@ -1,4 +1,9 @@
 <?php
+// $Id$
+/**
+ * @file
+ *   Fingerprint install file
+ */
 
 /**
  * Implementation of hook_schema().
