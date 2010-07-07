@@ -121,7 +121,7 @@ function fingerprint_form(&$node) {
  *
  * @todo make the node load and display nicer
  */
-function fingerprint_nodeapi(&$node, $op, $teaser, $page, $highlight = TRUE) {
+function fingerprint_nodeapi(&$node, $op, $teaser, $page, $highlight = FINGERPRINT_HIGHLIGHT) {
   if ($node->type != 'fingerprint') {
     return;
   }
