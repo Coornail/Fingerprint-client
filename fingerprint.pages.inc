@@ -119,9 +119,10 @@ function fingerprint_settings_form($form_state) {
  * Callback for node/%node/fingerprint_diff
  */
 function fingerprint_diff_list($node) {
+  global $user;
   $other_nodes = array();
 
-  $result = db_query('SELECT nid, title FROM {node} WHERE type="fingerprint" AND nid<>%d', $node->nid);
+  $result = db_query(db_rewrite_sql('SELECT nid, title FROM {node} WHERE type="fingerprint" AND nid<>%d AND uid=%d'), $node->nid, $user->uid);
   while ($other_node= db_fetch_object($result)) {
     $other_nodes[] = l($other_node->title, 'node/'. $node->nid .'/fingerprint_diff/'. $other_node->nid);
   }
@@ -141,6 +142,10 @@ function fingerprint_diff_list($node) {
 function fingerprint_view_diff($current, $other) {
   $current = node_load($current);
   $other = node_load($other);
+
+  if (!(node_access('view', $current) || node_access('view', $other))) {
+    drupal_access_denied();
+  }
 
   drupal_set_title(t('Difference between "@current_title" and "@other_title"', array('@current_title' => $current->title, '@other_title' => $other->title)));
 
