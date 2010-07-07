@@ -122,7 +122,7 @@ function fingerprint_settings_form($form_state) {
 /**
  * Lists nodes that the current node can be diffed for
  *
- * Callback for node/%node/fingerprint_diff
+ * Callback for node/%/fingerprint_diff
  */
 function fingerprint_diff_list($node) {
   global $user;
@@ -139,6 +139,8 @@ function fingerprint_diff_list($node) {
 
 /**
  * Shows the difference between two fingerprint node
+ *
+ * Callback for node/%/fingerprint_diff/%
  *
  * @param $current int Current node id
  * @param $other int Other node id
