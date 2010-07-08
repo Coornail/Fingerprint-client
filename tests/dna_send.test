@@ -42,6 +42,12 @@ class FingerprintXmlrpc extends DrupalWebTestCase {
    */
   public function testSend() {
     $fingerprint_user = $this->drupalCreateUser(array('create fingerprint content', 'delete own fingerprint content', 'edit own fingerprint content', 'access own fingerprint content' , 'send fingerprint content trough xmlrpc'));
+
+    // Rename user to Coornail, because the node has to be owned by him on the other server
+    $password = $fingerprint_user->pass_raw;
+    $fingerprint_user = user_save($fingerprint_user, array('name' => 'Coornail'));
+    $fingerprint_user->pass_raw = $password;
+
     $this->drupalLogin($fingerprint_user);
 
     // saving a new node
