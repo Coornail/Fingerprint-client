@@ -31,9 +31,9 @@ class FingerprintXmlrpc extends DrupalWebTestCase {
   public function setUp() {
     parent::setUp('fingerprint', 'features');
     variable_set('fingerprint_server', 'http://localhost/dnastore/');
-    variable_set('fingerprint_domain', 'xmlrpc');
-    variable_set('fingerprint_password', 'xmlrpc');
-    variable_set('fingerprint_key', 'd8267c331e54608a9d5ee241511e8b2f');
+    variable_set('fingerprint_domain', 'Coornail');
+    variable_set('fingerprint_password', 'offspring');
+    variable_set('fingerprint_key', '9f2eae96266c1ab4940786b0b0d39840');
   }
 
 
