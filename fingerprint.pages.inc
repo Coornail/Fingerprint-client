@@ -12,6 +12,8 @@
  */
 function fingerprint_send($node) {
   $url = variable_get('fingerprint_server', FINGERPRINT_DEFAULT_SERVER);
+  $url .= variable_get('fingerprint_services_path', FINGERPRINT_DEFAULT_SERVICES_PATH);
+
   $domain = variable_get('fingerprint_domain', '');
   $key = variable_get('fingerprint_key', '');
   $username = $domain;
@@ -89,7 +91,7 @@ function fingerprint_settings_form($form_state) {
   $form['fingerprint_server'] = array(
     '#type' => 'textfield',
     '#title' => t('Server'),
-    '#default_value' => variable_get('fingerprint_server', FINGERPRINT_DEFAULT_SERVER),
+    '#default_value' => variable_get('fingerprint_server', FINGERPRINT_DEFAULT_DOMAIN),
     '#description' => t('If you want to use your own fingerprint store, the following services permissions should be enabled: %permissions', array('%permissions' => 'system.connect, user.login, node.save')),
     '#required' => TRUE,
   );
