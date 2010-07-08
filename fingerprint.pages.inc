@@ -70,13 +70,8 @@ function fingerprint_send($node) {
   }
   drupal_write_record('fingerprint', $remote_nid, $update);
 
-  // If we own the domain we can provide nice url
-  if (strpos($url, FINGERPRINT_DEFAULT_DOMAIN) !== FALSE) {
-    $remote_node_path = FINGERPRINT_DEFAULT_DOMAIN .'?q=remote_node/'. $remote_node;
-    return t('Node saved as !url', array('!url' => l('remote_node/'. $remote_node, $remote_node_path)));
-  }
-
-  return t('Node saved as node/%nid', array('%nid' => $remote_node));
+  $remote_node_path = variable_get('fingerprint_server', FINGERPRINT_DEFAULT_SERVER) .'?q=node/'. $remote_node;
+  return t('Node saved as !url', array('!url' => l('node/'. $remote_node, $remote_node_path)));
 }
 
 
