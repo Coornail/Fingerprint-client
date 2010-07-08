@@ -59,11 +59,10 @@ class FingerprintXmlrpc extends DrupalWebTestCase {
     // Common error messages @see fingerprint_send()
     $this->assertNoText('First you have to set up your credentials', 'Credentials filled in');
     $this->assertNotext('Can\'t connect to server.', 'Found server');
-    $this->assertNoText('Invalid API key', 'Api key accepted');
     $this->assertNoText('Authentication failed', 'Log in successful');
+    $this->assertNoText('Failed to save node', 'Saved node');
 
-    $this->assertText('Node saved as');
-    //dd($this->drupalGetContent());
+    $this->assertText('Node saved as', 'Found reference link');
   }
 
 
