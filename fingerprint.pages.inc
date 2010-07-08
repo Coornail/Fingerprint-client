@@ -91,6 +91,21 @@ function fingerprint_settings_form($form_state) {
     '#required' => TRUE,
   );
 
+  $form['advanced'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Advanced settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+
+  $form['advanced']['fingerprint_services_path'] = array(
+    '#type' => 'textfield',
+    '#title' => t('xmlrpc path'),
+    '#default_value' => variable_get('fingerprint_services_path', FINGERPRINT_DEFAULT_SERVICES_PATH),
+    '#required' => TRUE,
+  );
+
+
   $form['fingerprint_domain'] = array( // We're using the username as the domain as well
     '#type' => 'textfield',
     '#title' => t('Username'),
