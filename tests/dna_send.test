@@ -37,5 +37,29 @@ class FingerprintXmlrpc extends DrupalWebTestCase {
   }
 
 
+  /**
+   * Tests the xmlrpc sending
+   */
+  public function testSend() {
+    $fingerprint_user = $this->drupalCreateUser(array('create fingerprint content', 'delete own fingerprint content', 'edit own fingerprint content', 'access own fingerprint content' , 'send fingerprint content trough xmlrpc'));
+    $this->drupalLogin($fingerprint_user);
+
+    // saving a new node
+    $this->drupalGet('node/add/fingerprint');
+    $this->drupalPost('node/add/fingerprint', array(), 'Save');
+    $this->assertLink('Send to pronovix');
+    $this->clickLink('Send to pronovix');
+
+    // Common error messages @see fingerprint_send()
+    $this->assertNoText('First you have to set up your credentials', 'Credentials filled in');
+    $this->assertNotext('Can\'t connect to server.', 'Found server');
+    $this->assertNoText('Invalid API key', 'Api key accepted');
+    $this->assertNoText('Authentication failed', 'Log in successful');
+
+    $this->assertText('Node saved as');
+    //dd($this->drupalGetContent());
+  }
+
+
 }
 
