@@ -1,0 +1,41 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ *  Tests for fingerprint xmlrpc sending
+ *
+ *  Copyright 2010 by Kornel Lugosi (Coornail)
+ *  Pronovix
+ */
+
+class FingerprintXmlrpc extends DrupalWebTestCase {
+  var $info;
+  /**
+  * Implementation of getInfo().
+  */
+  public static function getInfo() {
+    return array(
+      'name' => t('Fingerprint xmlrpc'),
+      'description' => t('Tests for fingerprint xmlrpc send functionality'),
+      'group' => t('Pronovix'),
+    );
+  }
+
+
+  /**
+  * Implementation of setUp().
+  *
+  * Settings up testing credentials
+  */
+  public function setUp() {
+    parent::setUp('fingerprint', 'features');
+    variable_set('fingerprint_server', 'http://localhost/dnastore/');
+    variable_set('fingerprint_domain', 'xmlrpc');
+    variable_set('fingerprint_password', 'xmlrpc');
+    variable_set('fingerprint_key', 'd8267c331e54608a9d5ee241511e8b2f');
+  }
+
+
+}
+
