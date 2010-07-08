@@ -71,7 +71,7 @@ class FingerprintSettings {
    */
   protected function importSettings($settings) {
     if (!isset($settings['export_version']) || $settings['export_version'] != FINGERPRINT_VERSION) {
-      throw new Exception("Importing version ". $settings['export_version'] .' doesn\'t match current version: '. FINGERPRINT_VERSION , E_USER_WARNING);
+      throw new Exception("Importing version ". check_plain($settings['export_version']) .' doesn\'t match current version: '. FINGERPRINT_VERSION , E_USER_WARNING);
     }
     if (isset($settings['timestamp'])) {
       $this->setTimestamp($settings['timestamp']);
