@@ -44,6 +44,8 @@ function fingerprint_send($node) {
    */
   if ($node->fingerprint_remote_nid === FALSE) {
     unset($node->nid);
+  } else {
+    $node->nid = $node->fingerprint_remote_nid;
   }
   // Have to set changed, else the version on the other server will be never, and node can't be saved
   $node->changed = time();
@@ -61,14 +63,11 @@ function fingerprint_send($node) {
   $remote_nid->nid = $nid;
   $remote_nid->remote_nid = $remote_node;
 
-  // If remote_nid is not set, we insert, else we update
+  // If remote_nid is not set, we insert it
   if ($node->fingerprint_remote_nid == FALSE) {
     $update = array();
+    drupal_write_record('fingerprint', $remote_nid, $update);
   }
-  else {
-    $update = array('nid');
-  }
-  drupal_write_record('fingerprint', $remote_nid, $update);
 
   $remote_node_path = variable_get('fingerprint_server', FINGERPRINT_DEFAULT_SERVER) .'?q=node/'. $remote_node;
   return t('Node saved as !url', array('!url' => l('node/'. $remote_node, $remote_node_path)));
@@ -104,7 +103,6 @@ function fingerprint_settings_form($form_state) {
     '#default_value' => variable_get('fingerprint_services_path', FINGERPRINT_DEFAULT_SERVICES_PATH),
     '#required' => TRUE,
   );
-
 
   $form['fingerprint_domain'] = array( // We're using the username as the domain as well
     '#type' => 'textfield',
