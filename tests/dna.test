@@ -44,12 +44,12 @@ class fingerprintbasic extends DrupalWebTestCase {
 
     // User saves a dump
     $this->drupalGet('node/add/fingerprint');
-    $this->assertHttpStatusCode(200);
+    $this->assertResponse(200);
     $this->drupalPost('node/add/fingerprint', array(), 'Save');
 
     // It should not appear on the front page
     $this->drupalGet('');
-    $this->assertHttpStatusCode(200);
+    $this->assertResponse(200);
     $this->assertNoPattern('Site dump');
 
     // Other user logs in, can't access the dump
@@ -58,11 +58,11 @@ class fingerprintbasic extends DrupalWebTestCase {
 
     // It should not appear on the front page
     $this->drupalGet('');
-    $this->assertHttpStatusCode(200);
+    $this->assertResponse(200);
     $this->assertNoPattern('Site dump');
 
     $this->drupalGet('node/1');
-    $this->assertHttpStatusCode(403);
+    $this->assertResponse(403);
 
     // site creator logs back in
     $this->drupalLogout();
@@ -70,24 +70,9 @@ class fingerprintbasic extends DrupalWebTestCase {
 
     // User deletes own dump
     $this->drupalGet('node/1/edit');
-    $this->assertHttpStatusCode(200);
+    $this->assertresponse(200);
     $this->drupalPost('node/1/edit', array(), 'Delete');
   }
-
-
-  /**
-   * Check if the current pages http status code is $status_code
-   */
-  public function assertHttpStatusCode($status_code, $msg = NULL) {
-    $headers = $this->drupalGetHeaders();
-    $current_status_code = explode(' ', $headers[':status']);
-    $current_status_code = (int)$current_status_code[1];
-    if ($msg === NULL) {
-      $msg = t('Http status is %status', array('%status' => $status_code));
-    }
-    $this->assertEqual($current_status_code, $status_code, $msg);
-  }
-
 
 }
 
