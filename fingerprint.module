@@ -15,7 +15,7 @@ function fingerprint_menu() {
   $items = array();
 
   $items['node/%node/fingerprint_send'] = array(
-    'title' => 'Send to pronovix',
+    'title' => 'Send to remote server',
     'page callback' => 'fingerprint_send',
     'page arguments' => array(1),
     'type' => MENU_LOCAL_TASK,

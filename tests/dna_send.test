@@ -53,8 +53,8 @@ class FingerprintXmlrpc extends DrupalWebTestCase {
     // saving a new node
     $this->drupalGet('node/add/fingerprint');
     $this->drupalPost('node/add/fingerprint', array(), 'Save');
-    $this->assertLink('Send to pronovix');
-    $this->clickLink('Send to pronovix');
+    $this->assertLink('Send to remote server');
+    $this->clickLink('Send to remote server');
 
     // Common error messages @see fingerprint_send()
     $this->assertNoText('First you have to set up your credentials', 'Credentials filled in');
