@@ -171,7 +171,7 @@ function fingerprint_view_diff($current, $other) {
   fingerprint_nodeapi(&$current, 'view', NULL, NULL, FINGERPRINT_NOHIGHLIGHT);
   fingerprint_nodeapi(&$other, 'view', NULL, NULL, FINGERPRINT_NOHIGHLIGHT);
   // Decoding '<' and '>' chars so it can be decoded and removing <br />'s
-  $current->body = str_replace('<br />', '', htmlspecialchars_decode($current->content['body']['#value']));
+  $current->body = htmlspecialchars_decode($current->content['body']['#value']);
   $other->body = str_replace('<br />', '', htmlspecialchars_decode($other->content['body']['#value']));
 
   module_load_include('inc', 'diff', 'diff.pages');
