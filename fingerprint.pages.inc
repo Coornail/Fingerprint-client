@@ -26,7 +26,7 @@ function fingerprint_send($node) {
   module_load_include('inc', 'fingerprint', 'fingerprint_xmlrpc');
   $xmlrpc_handler = new FingerprintXmlrpc($domain, $key, $url);
   if (!$xmlrpc_handler->session_active()) {
-    return t('Can\'t connect to server. Please !check_url.', array('!check_url' => l('check the server url', 'admin/settings/fingerprint')));
+    return t('Can\'t connect to server. Please !check_url.', array('!check_url' => l('check the server url', 'admin/settings/fingerprint'))) .'<br />'. t('Error message: %message', array('%message' => xmlrpc_error_msg()));
   }
 
   $user = $xmlrpc_handler->userLogin($username, $password);
