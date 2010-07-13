@@ -36,7 +36,7 @@ function fingerprint_menu() {
   // Diff module integration
   if (module_exists('diff')) {
     $items['node/%node/fingerprint_diff'] = array(
-      'title' => 'Difference between versions',
+      'title' => 'Difference',
       'page callback' => 'fingerprint_diff_list',
       'page arguments' => array(1),
       'type' => MENU_LOCAL_TASK,
