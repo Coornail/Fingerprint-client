@@ -40,9 +40,16 @@ function fingerprint_similar_view() {
   module_load_include('php', 'diff', 'DiffEngine');
   module_load_include('inc', 'fingerprint', 'reverse_diff/reverse_diff');
 
-  $diff = new ReverseDiff($other->body, $current->body);
-  $ret = $diff->Diff($other->body, $current->body);
-  var_dump($ret);
+  //$diff = new ReverseDiff($other->body, $current->body);
+  $other->body = explode("\n", $other->body);
+  $current->body = explode("\n", $current->body);
+
+  $diff = new Diff($other->body, $current->body);
+  $diff->Diff($other->body, $current->body);
+
+  $formatter = new DrupalDiffFormatter();
+  $diff_rows = $formatter->format($diff);
+  var_dump($diff_rows);
 
   return '';
 }
