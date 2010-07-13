@@ -44,13 +44,17 @@ function fingerprint_similar_view() {
   $other->body = explode("\n", $other->body);
   $current->body = explode("\n", $current->body);
 
-  $diff = new Diff($other->body, $current->body);
+  $diff = new ReverseDiff($other->body, $current->body);
   $diff->Diff($other->body, $current->body);
 
   $formatter = new DrupalDiffFormatter();
   $diff_rows = $formatter->format($diff);
-  var_dump($diff_rows);
 
-  return '';
+  module_load_include('inc', 'diff', 'diff.pages');
+  $header = _diff_default_header();
+  $cols = _diff_default_cols();
+
+  drupal_add_css(drupal_get_path('module', 'diff') .'/diff.css', 'module', 'all', FALSE);
+  return theme('diff_table', $header, $diff_rows, array('class' => 'diff'), NULL, $cols);
 }
 
