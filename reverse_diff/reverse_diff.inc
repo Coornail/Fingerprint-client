@@ -1,31 +1,27 @@
 <?php
 
-class ReverseDiff extends Diff {
+
+class ReverseDiffFormatter extends DrupalDiffFormatter {
 
   /**
-   * @override
+   * Override maximum context line values (so it shows allt he nonchanged content)
    */
-  function Diff($from_lines, $to_lines) {
-    $eng = new _ReverseDiffEngine();
-    $this->edits = $eng->diff($from_lines, $to_lines);
-    var_dump($this->edits);
+  function __construct() {
+    $this->leading_context_lines = PHP_INT_MAX;
+    $this->trailing_context_lines = PHP_INT_MAX;
   }
-}
 
-
-/**
- * @see _DiffEngine
- *
- * An engine that shows the differencies instead of the differencies
- */
-class _ReverseDiffEngine extends _DiffEngine {
-
-  /**
-   * @override
-   * Shows the similarities
-   */
-  function diff($from_lines, $to_lines) {
-    $origdiff = new _DiffEngine();
-    return $origdiff->diff($from_lines, $to_lines);
+  function addedLine($line) {
+    return array(
+      ' ',
+      array(
+        'data' => '<br />',
+      )
+    );
   }
+
+  function deletedLine($line) {
+    return $this->addedLine($line);
+  }
+
 }
