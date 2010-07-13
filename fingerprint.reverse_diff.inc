@@ -18,3 +18,32 @@ function fingerprint_similar_list($node) {
   return theme('item_list', $other_nodes);
 }
 
+
+
+/**
+ * Callback for fingerprint_similar_view
+ */
+function fingerprint_similar_view() {
+  $nodes = arg();
+  array_shift($nodes);
+
+  $current = node_load($nodes[0]);
+  $other = node_load($nodes[1]);
+
+  // Emulate node render
+  fingerprint_nodeapi(&$current, 'view', NULL, NULL, FINGERPRINT_NOHIGHLIGHT);
+  fingerprint_nodeapi(&$other, 'view', NULL, NULL, FINGERPRINT_NOHIGHLIGHT);
+  // Decoding '<' and '>' chars so it can be decoded
+  $current->body = htmlspecialchars_decode($current->content['body']['#value']);
+  $other->body = htmlspecialchars_decode($other->content['body']['#value']);
+
+  module_load_include('php', 'diff', 'DiffEngine');
+  module_load_include('inc', 'fingerprint', 'reverse_diff/reverse_diff');
+
+  $diff = new ReverseDiff($other->body, $current->body);
+  $ret = $diff->Diff($other->body, $current->body);
+  var_dump($ret);
+
+  return '';
+}
+
