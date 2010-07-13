@@ -61,6 +61,15 @@ function fingerprint_menu() {
       'access arguments' => array('administer site configuration'),
       'file' => 'fingerprint.reverse_diff.inc',
     );
+
+    $items['fingerprint_similar_view'] = array(
+      'title' => 'Similarities',
+      'page callback' => 'fingerprint_similar_view',
+      'page arguments' => array(1),
+      'type' => MENU_LOCAL_TASK,
+      'access arguments' => array('administer site configuration'),
+      'file' => 'fingerprint.reverse_diff.inc',
+    );
   }
 
   return $items;
