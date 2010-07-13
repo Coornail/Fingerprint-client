@@ -50,11 +50,10 @@ function fingerprint_similar_view() {
   $formatter = new ReverseDiffFormatter();
   $diff_rows = $formatter->format($diff);
 
-  module_load_include('inc', 'diff', 'diff.pages');
-  $header = _diff_default_header();
-  $cols = _diff_default_cols();
+  return theme('fingerprint_reverse_diff', $diff_rows);
+}
 
-  drupal_add_css(drupal_get_path('module', 'diff') .'/diff.css', 'module', 'all', FALSE);
-  return theme('diff_table', $header, $diff_rows, array('class' => 'diff'), NULL, $cols);
+function theme_fingerprint_reverse_diff($rows) {
+  return '';
 }
 
