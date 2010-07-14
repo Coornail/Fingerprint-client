@@ -22,6 +22,8 @@ function fingerprint_similar_list($node) {
 
 /**
  * Callback for fingerprint_similar_view
+ *
+ * @todo Merge this and parts of fingerprint_view_diff()
  */
 function fingerprint_similar_view() {
   $nodes = arg();
@@ -50,6 +52,12 @@ function fingerprint_similar_view() {
 }
 
 
+/**
+ * Displays the same lines in two nodes
+ *
+ * @todo fix trailing spaces
+ * @todo geshi filter
+ */
 function theme_fingerprint_reverse_diff($rows) {
   return '<pre>'. htmlspecialchars(implode("\n", $rows)) .'</pre>';
 }
