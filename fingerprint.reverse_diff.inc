@@ -53,7 +53,8 @@ function fingerprint_similar_view() {
   return theme('fingerprint_reverse_diff', $diff_rows);
 }
 
+
 function theme_fingerprint_reverse_diff($rows) {
-  return '';
+  return '<pre>'. htmlspecialchars(implode("\n", $rows)) .'</pre>';
 }
 
