@@ -14,7 +14,7 @@ function fingerprint_similar_list($node) {
     $node = node_load($node);
   }
   $result = db_query(db_rewrite_sql('SELECT nid, title FROM {node} WHERE type="fingerprint" AND nid<>%d'), $node->nid);
-  while ($other_node= db_fetch_object($result)) {
+  while ($other_node = db_fetch_object($result)) {
     $other_nodes[] = l($other_node->title, 'fingerprint_similar_view/'. $node->nid .'/'. $other_node->nid);
   }
 
