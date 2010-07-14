@@ -61,7 +61,6 @@ function fingerprint_view_similar() {
  *   Array of rows to display
  *
  * @todo fix trailing spaces
- * @todo geshi filter
  */
 function theme_fingerprint_reverse_diff($rows) {
   $xml = implode("\n", $rows);
