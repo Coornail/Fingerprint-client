@@ -43,6 +43,11 @@ class FingerprintReverseDiff extends DrupalWebTestCase {
     $this->drupalGet('node/add/fingerprint');
     $this->drupalPost('node/add/fingerprint', array(), 'Save');
 
+    // Parse the node title
+    $site_title = current($this->xpath('//title'));
+    $node_name = explode('|', $site_title);
+    $node_name = trim($node_name[0]);
+
     // Change site name
     variable_set('site_name', 'site_name_changed');
 
@@ -50,12 +55,16 @@ class FingerprintReverseDiff extends DrupalWebTestCase {
     $this->drupalGet('node/add/fingerprint');
     $this->drupalPost('node/add/fingerprint', array(), 'Save');
 
-    $this->drupalGet('node/2');
     $this->assertLink('Similarities');
-
-    dd($this->drupalGetContent());
-
     $this->clickLink('Similarities');
+
+    // There must be a link with the first node name
+    // index 0 is in the breadcrumb, there must be an another one
+    $this->assertLink($node_name, 1);
+    $this->clickLink($node_name, 1);
+
+    // There must be a difference between the dumps
+    $this->assertText('-----------------------');
 
   }
 
