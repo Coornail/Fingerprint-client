@@ -64,7 +64,9 @@ function fingerprint_view_similar() {
  * @todo geshi filter
  */
 function theme_fingerprint_reverse_diff($rows) {
-  return '<pre>'. htmlspecialchars(implode("\n", $rows)) .'</pre>';
+  $xml = implode("\n", $rows);
+  module_load_include('inc', 'fingerprint', 'fingerprint_output_xml');
+  return FingerprintXml::formatXml($xml);
 }
 
 
