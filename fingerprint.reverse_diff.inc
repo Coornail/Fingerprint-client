@@ -1,5 +1,8 @@
 <?php
 
+// Separates the similar blocks from eachother
+define('FINGERPRINT_REVERSE_DIFF_SEPARATOR', "\n--------------------------------------------------------------------------------\n");
+
 /**
  * Callback for node/%/fingerprint_reverse_diff
  */
@@ -87,14 +90,13 @@ class ReverseDiffFormatter extends DrupalDiffFormatter {
    * @override
    *
    * Handles hwo the objects will be written to the screen
-   * @todo better separator
    */
   function _block($xbeg, $xlen, $ybeg, $ylen, &$edits) {
     foreach ($edits as $edit) {
       if ($edit->type == 'copy') {
         $this->rows = array_merge ($this->rows, $edit->orig);
       } else {
-        $this->rows[] = ''; // empty line for separating
+        $this->rows[] = FINGERPRINT_REVERSE_DIFF_SEPARATOR; // empty line for separating
       }
     }
   }
