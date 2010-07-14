@@ -37,10 +37,6 @@ function fingerprint_similar_view() {
   $current->body = htmlspecialchars_decode($current->content['body']['#value']);
   $other->body = htmlspecialchars_decode($other->content['body']['#value']);
 
-  module_load_include('php', 'diff', 'DiffEngine');
-  module_load_include('inc', 'fingerprint', 'reverse_diff/reverse_diff');
-
-  //$diff = new ReverseDiff($other->body, $current->body);
   $other->body = explode("\n", $other->body);
   $current->body = explode("\n", $current->body);
 
@@ -56,5 +52,39 @@ function fingerprint_similar_view() {
 
 function theme_fingerprint_reverse_diff($rows) {
   return '<pre>'. htmlspecialchars(implode("\n", $rows)) .'</pre>';
+}
+
+
+module_load_include('php', 'diff', 'DiffEngine'); // needed for DrupalDiffFormatter class
+/**
+ * Show the matching lines in a diff
+ * @subpackage DifferenceEngine
+ */
+class ReverseDiffFormatter extends DrupalDiffFormatter {
+
+  /**
+   * Override maximum context line values (so it shows all the nonchanged content)
+   */
+  function __construct() {
+    $this->leading_context_lines = PHP_INT_MAX;
+    $this->trailing_context_lines = PHP_INT_MAX;
+  }
+
+
+  /**
+   * @override
+   *
+   * Handles hwo the objects will be written to the screen
+   */
+  function _block($xbeg, $xlen, $ybeg, $ylen, &$edits) {
+    foreach ($edits as $edit) {
+      if ($edit->type == 'copy') {
+        $this->rows = array_merge ($this->rows, $edit->orig);
+      } else {
+        $this->rows[] = ''; // empty line for separating
+      }
+    }
+  }
+
 }
 
