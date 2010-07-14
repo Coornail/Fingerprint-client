@@ -25,7 +25,7 @@ function fingerprint_similar_list($node) {
  *
  * @todo Merge this and parts of fingerprint_view_diff()
  */
-function fingerprint_similar_view() {
+function fingerprint_view_similar() {
   $nodes = arg();
   array_shift($nodes);
 

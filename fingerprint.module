@@ -64,7 +64,7 @@ function fingerprint_menu() {
 
     $items['fingerprint_similar_view'] = array(
       'title' => 'Similarities',
-      'page callback' => 'fingerprint_similar_view',
+      'page callback' => 'fingerprint_view_similar',
       'page arguments' => array(1),
       'type' => MENU_LOCAL_TASK,
       'access arguments' => array('administer site configuration'),
