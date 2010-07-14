@@ -59,8 +59,6 @@ function fingerprint_view_similar() {
  *
  * @param $rows
  *   Array of rows to display
- *
- * @todo fix trailing spaces
  */
 function theme_fingerprint_reverse_diff($rows) {
   $xml = implode("\n", $rows);
