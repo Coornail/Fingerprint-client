@@ -55,6 +55,9 @@ function fingerprint_similar_view() {
 /**
  * Displays the same lines in two nodes
  *
+ * @param $rows
+ *   Array of rows to display
+ *
  * @todo fix trailing spaces
  * @todo geshi filter
  */
