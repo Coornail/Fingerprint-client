@@ -32,6 +32,8 @@ function fingerprint_view_similar() {
   $current = node_load($nodes[0]);
   $other = node_load($nodes[1]);
 
+  drupal_set_title(t('Similar rows in @origin and @other', array('@origin' => $current->title, '@other' => $other->title)));
+
   // Emulate node render
   fingerprint_nodeapi(&$current, 'view', NULL, NULL, FINGERPRINT_NOHIGHLIGHT);
   fingerprint_nodeapi(&$other, 'view', NULL, NULL, FINGERPRINT_NOHIGHLIGHT);
