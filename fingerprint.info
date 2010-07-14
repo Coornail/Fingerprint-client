@@ -4,4 +4,4 @@ core = 6.x
 dependencies[] = features
 package = Pronovix
 
-version = 0.1
+version = 0.2
