@@ -252,7 +252,7 @@ function fingerprint_help($path, $arg) {
         . t('If you do so, you can check if your settings working at every fingerprint node using the "Send to Pronovix" tab') .'<br />'
         . t('Else you can ignore these settings and start creating a fingerprint at !url', array('!url' => l('Create site fingerprint', 'node/add/fingerprint'))) .'</p>';
     case 'node/add/fingerprint':
-      return '<p>'. t('Please note that this dump is not for backup or recovery, it most likely can\'t be imported in any form.') . '<br />'
+      return '<p>'. t('Please note that this dump is not for backup or recovery, it most likely can\'t be imported in any form.') .'<br />'
         . t('If your permissions are not set up correctly, this dump might expose important private data!') .'</p>';
   }
 
