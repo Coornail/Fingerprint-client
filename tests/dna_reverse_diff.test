@@ -1,0 +1,72 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ *  Tests for fingerprint module
+ *
+ *  Copyright 2010 by Kornel Lugosi (Coornail)
+ *  Pronovix
+ */
+
+class FingerprintReverseDiff extends DrupalWebTestCase {
+  var $info;
+  /**
+  * Implementation of getInfo().
+  */
+  public static function getInfo() {
+    return array(
+      'name' => t('Fingerprint reverse diff'),
+      'description' => t('Tests for reverse diff pages'),
+      'group' => t('Pronovix'),
+    );
+  }
+
+
+  /**
+  * Implementation of setUp().
+  */
+  public function setUp() {
+    parent::setUp('fingerprint', 'features', 'diff');
+  }
+
+
+  /**
+   * Tests Diff pages
+   */
+  public function testDiff() {
+    // User who has rights to create dumps
+    $fingerprint_user = $this->drupalCreateUser(array('create fingerprint content', 'delete own fingerprint content', 'edit own fingerprint content', 'access own fingerprint content', 'administer site configuration'));
+    $this->drupalLogin($fingerprint_user);
+
+    // User saves a dump
+    $this->drupalGet('node/add/fingerprint');
+    $this->drupalPost('node/add/fingerprint', array(), 'Save');
+
+    // Parse the node title
+    $site_title = current($this->xpath('//title'));
+    $node_name = explode('|', $site_title);
+    $node_name = trim($node_name[0]);
+
+    // Change site name
+    variable_set('site_name', 'site_name_changed');
+
+    // Add an another dump
+    $this->drupalGet('node/add/fingerprint');
+    $this->drupalPost('node/add/fingerprint', array(), 'Save');
+
+    $this->assertLink('Similarities');
+    $this->clickLink('Similarities');
+
+    // There must be a link with the first node name
+    // index 0 is in the breadcrumb, there must be an another one
+    $this->assertLink($node_name, 1);
+    $this->clickLink($node_name, 1);
+
+    // There must be a difference between the dumps
+    $this->assertText('-----------------------');
+
+  }
+
+}
+

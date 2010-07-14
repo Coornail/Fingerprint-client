@@ -36,7 +36,7 @@ function fingerprint_menu() {
   // Diff module integration
   if (module_exists('diff')) {
     $items['node/%node/fingerprint_diff'] = array(
-      'title' => 'Difference between versions',
+      'title' => 'Difference',
       'page callback' => 'fingerprint_diff_list',
       'page arguments' => array(1),
       'type' => MENU_LOCAL_TASK,
@@ -51,6 +51,24 @@ function fingerprint_menu() {
       'type' => MENU_LOCAL_TASK,
       'access arguments' => array('administer site configuration'),
       'file' => 'fingerprint.pages.inc',
+    );
+
+    $items['node/%/fingerprint_reverse_diff'] = array(
+      'title' => 'Similarities',
+      'page callback' => 'fingerprint_similar_list',
+      'page arguments' => array(1),
+      'type' => MENU_LOCAL_TASK,
+      'access arguments' => array('administer site configuration'),
+      'file' => 'fingerprint.reverse_diff.inc',
+    );
+
+    $items['fingerprint_similar_view'] = array(
+      'title' => 'Similarities',
+      'page callback' => 'fingerprint_view_similar',
+      'page arguments' => array(1),
+      'type' => MENU_LOCAL_TASK,
+      'access arguments' => array('administer site configuration'),
+      'file' => 'fingerprint.reverse_diff.inc',
     );
   }
 
@@ -290,4 +308,17 @@ function _fingerprint_filter_all(&$tree) {
       $tree[$key] = FINGERPRINT_FILTERED_ELEMENT;
     }
   }
+}
+
+
+/**
+ * Implementation of hook_theme().
+ */
+function fingerprint_theme($existing, $type, $theme, $path) {
+  return array(
+    'fingerprint_reverse_diff' => array(
+      'arguments' => array('rows' => ''),
+      'file' => 'reverse_diff/fingerprint.reverse-diff.inc'
+    ),
+  );
 }
