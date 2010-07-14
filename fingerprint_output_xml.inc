@@ -116,7 +116,10 @@ class FingerprintXml extends FingerprintSettings {
       return geshifilter_process($xml, 'XML');
     }
 
-    return '<pre>'. htmlspecialchars($xml) .'</pre>';
+    if ($highlight)
+      return '<pre>'. htmlspecialchars($xml) .'</pre>';
+
+    return htmlspecialchars($xml);
   }
 
 }
