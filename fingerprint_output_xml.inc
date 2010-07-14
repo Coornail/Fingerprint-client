@@ -91,9 +91,19 @@ class FingerprintXml extends FingerprintSettings {
    * Tries highlight if geshifilter is enabled
    * Cleans up xml if tidy extension is installed
    *
+   * @param $xml
+   *   An xml as string.
+   *   If you have tidy extension it will clean it up, doesn't have to be valid
+   *
+   * @param $highlight
+   *   Boolean if you want to highlight the text or not
+   *   True means you want to display it in Drupal
+   *   False means you need the clean xml output (without pre and geshi filter) for additional processing
+   *
    * @todo make this themable by drupal
    *
-   * @return String html output
+   * @return
+   *   String html output
    */
   public static function formatXml($xml, $highlight = TRUE) {
     // Check for broken xml (for example node teaser)
