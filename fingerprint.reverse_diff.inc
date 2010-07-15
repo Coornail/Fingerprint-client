@@ -59,7 +59,7 @@ function fingerprint_view_similar() {
   // Emulate node render
   foreach ($nodes as &$node) {
     fingerprint_nodeapi(&$node, 'view', NULL, NULL, FINGERPRINT_NOHIGHLIGHT);
-    // Decoding '<' and '>' chars so it can be decoded
+    // Decoding '<' and '>' chars so it can be displayed
     $node->body = htmlspecialchars_decode($node->content['body']['#value']);
     $node->body = explode("\n", $node->body);
   }
