@@ -81,7 +81,8 @@ class FingerprintSettings {
     $report = array();
     foreach (module_implements('requirements') as $module) {
       $function = $module .'_requirements';
-      $report[$module] = $function('runtime');
+      $report[$module]['install'] = $function('install');
+      $report[$module]['runtime'] = $function('runtime');
     }
     $this->setStatusReport($report);
   }
