@@ -45,31 +45,41 @@ function fingerprint_similar_list($nodes) {
  * @todo Merge this and parts of fingerprint_view_diff()
  */
 function fingerprint_view_similar() {
-  $nodes = arg();
-  array_shift($nodes);
+  $nids = arg();
+  array_shift($nids);
 
-  $current = node_load($nodes[0]);
-  $other = node_load($nodes[1]);
+  $nodes = array();
+  foreach ($nids as $nid) {
+    $nodes[] = node_load($nid); 
 
-  drupal_set_title(t('Similar rows in @origin and @other', array('@origin' => $current->title, '@other' => $other->title)));
+  }
+
+//  drupal_set_title(t('Similar rows in @origin and @other', array('@origin' => $current->title, '@other' => $other->title)));
 
   // Emulate node render
-  fingerprint_nodeapi(&$current, 'view', NULL, NULL, FINGERPRINT_NOHIGHLIGHT);
-  fingerprint_nodeapi(&$other, 'view', NULL, NULL, FINGERPRINT_NOHIGHLIGHT);
-  // Decoding '<' and '>' chars so it can be decoded
-  $current->body = htmlspecialchars_decode($current->content['body']['#value']);
-  $other->body = htmlspecialchars_decode($other->content['body']['#value']);
+  foreach ($nodes as &$node) {
+    fingerprint_nodeapi(&$node, 'view', NULL, NULL, FINGERPRINT_NOHIGHLIGHT);
+    // Decoding '<' and '>' chars so it can be decoded
+    $node->body = htmlspecialchars_decode($node->content['body']['#value']);
+    $node->body = explode("\n", $node->body);
+  }
 
-  $other->body = explode("\n", $other->body);
-  $current->body = explode("\n", $current->body);
 
-  $diff = new Diff($other->body, $current->body);
-  $diff->Diff($other->body, $current->body);
+  $node_number = count($nodes)-1;
+  for ($i=0; $i<$node_number; $i++) {
+    $diff = new Diff($nodes[$i]->body, $nodes[$i+1]->body);
+    $diff->Diff($nodes[$i]->body, $nodes[$i+1]->body);
+    $formatter = new ReverseDiffFormatter();
+    $nodes[$i+1]->body = implode("\n", $formatter->format($diff));
+  }
 
-  $formatter = new ReverseDiffFormatter();
-  $diff_rows = $formatter->format($diff);
+  $blocks = $formatter->blocks;
+  foreach ($blocks as &$block) {
+    $block = implode("\n", $block);
+  }
 
-  return theme('fingerprint_reverse_diff', $diff_rows);
+  $similar = implode(FINGERPRINT_REVERSE_DIFF_SEPARATOR, $blocks);
+  return theme('fingerprint_reverse_diff', $similar);
 }
 
 
@@ -80,9 +90,9 @@ function fingerprint_view_similar() {
  *   Array of rows to display
  */
 function theme_fingerprint_reverse_diff($rows) {
-  $xml = implode("\n", $rows);
+  //$xml = implode("\n", $rows);
   module_load_include('inc', 'fingerprint', 'fingerprint_output_xml');
-  return FingerprintXml::formatXml($xml);
+  return FingerprintXml::formatXml($rows);
 }
 
 
@@ -93,10 +103,12 @@ module_load_include('php', 'diff', 'DiffEngine'); // needed for DrupalDiffFormat
  */
 class ReverseDiffFormatter extends DrupalDiffFormatter {
 
+  public $blocks = array();
+
   /**
    * Override maximum context line values (so it shows all the nonchanged content)
    */
-  function __construct() {
+  public function __construct() {
     $this->leading_context_lines = PHP_INT_MAX;
     $this->trailing_context_lines = PHP_INT_MAX;
   }
@@ -107,12 +119,13 @@ class ReverseDiffFormatter extends DrupalDiffFormatter {
    *
    * Handles hwo the objects will be written to the screen
    */
-  function _block($xbeg, $xlen, $ybeg, $ylen, &$edits) {
+  public function _block($xbeg, $xlen, $ybeg, $ylen, &$edits) {
     foreach ($edits as $edit) {
       if ($edit->type == 'copy') {
         $this->rows = array_merge ($this->rows, $edit->orig);
+        $this->blocks[] = $edit->orig;
       } else {
-        $this->rows[] = FINGERPRINT_REVERSE_DIFF_SEPARATOR; // empty line for separating
+       // $this->rows[] = FINGERPRINT_REVERSE_DIFF_SEPARATOR; // empty line for separating
       }
     }
   }
