@@ -123,7 +123,8 @@ class ReverseDiffFormatter extends DrupalDiffFormatter {
   /**
    * @override
    *
-   * Handles hwo the objects will be written to the screen
+   * Handles the objects will be written to the screen
+   * Also stores the similar blocks in $this->block, which can be used!
    */
   public function _block($xbeg, $xlen, $ybeg, $ylen, &$edits) {
     foreach ($edits as $edit) {
