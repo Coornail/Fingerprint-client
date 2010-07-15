@@ -70,7 +70,7 @@ function fingerprint_view_similar() {
     $diff = new Diff($nodes[$i]->body, $nodes[$i+1]->body);
     $diff->Diff($nodes[$i]->body, $nodes[$i+1]->body);
     $formatter = new ReverseDiffFormatter();
-    $nodes[$i+1]->body = implode("\n", $formatter->format($diff));
+    $nodes[$i+1]->body = $formatter->format($diff);
   }
 
   $blocks = $formatter->blocks;
