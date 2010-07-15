@@ -351,7 +351,14 @@ function fingerprint_block($op = 'list', $delta = 0, $edit = array()) {
  * Wrapper around the similarity search node list
  */
 function _fingerprint_similar_list() {
+  if (arg(0) != 'fingerprint_similar_view') {
+    return NULL;
+  }
+
+  $nodes = arg();
+  array_shift($nodes);
+
   module_load_include('inc', 'fingerprint', 'fingerprint.reverse_diff');
-  return '';
+  return fingerprint_similar_list($nodes);
 }
 
