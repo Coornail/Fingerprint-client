@@ -8,7 +8,7 @@
  */
 
 // If the storage format changes, make sure to increase!
-define('FINGERPRINT_VERSION', '0.1');
+define('FINGERPRINT_VERSION', '0.2');
 
 /**
  * Retrieves and stores the site settings
@@ -43,6 +43,13 @@ class FingerprintSettings {
   public function setTimestamp($timestamp) {$this->timestamp = $timestamp;}
 
   /**
+   * @var Status report
+   */
+  protected $statusReport = array();
+  public function getStatusReport() {return $this->statusReport;}
+  public function setStatusReport($report) {$this->statusReport = $report;}
+
+  /**
    * @var version
    */
   protected $version = FINGERPRINT_VERSION;
@@ -61,8 +68,22 @@ class FingerprintSettings {
       $this->pullVariables();
       $this->pullModules();
       $this->pullEnabledModules();
+      $this->pullStatusReport();
       $this->setTimestamp(time());
     }
+  }
+
+
+  /**
+   * Pull Status report
+   */
+  protected function pullStatusReport() {
+    $report = array();
+    foreach (module_implements('requirements') as $module) {
+      $function = $module .'_requirements';
+      $report[$module] = $function('runtime');
+    }
+    $this->setStatusReport($report);
   }
 
 
@@ -198,6 +219,7 @@ class FingerprintSettings {
     $ret['variables'] = $this->getVariables();
     $ret['modules'] = $this->getModules();
     $ret['enabled_modules'] = $this->getEnabledModules();
+    $ret['status_report'] = $this->getStatusReport();
 
     return $ret;
   }
