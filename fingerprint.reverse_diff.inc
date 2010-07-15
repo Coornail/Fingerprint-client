@@ -73,7 +73,6 @@ function fingerprint_view_similar() {
     $node->body = explode("\n", $node->body);
   }
 
-
   $node_number = count($nodes)-1;
   for ($i=0; $i<$node_number; $i++) {
     $diff = new Diff($nodes[$i]->body, $nodes[$i+1]->body);
@@ -98,10 +97,9 @@ function fingerprint_view_similar() {
  * @param $rows
  *   Array of rows to display
  */
-function theme_fingerprint_reverse_diff($rows) {
-  //$xml = implode("\n", $rows);
+function theme_fingerprint_reverse_diff($xml) {
   module_load_include('inc', 'fingerprint', 'fingerprint_output_xml');
-  return FingerprintXml::formatXml($rows);
+  return FingerprintXml::formatXml($xml);
 }
 
 
@@ -112,6 +110,7 @@ module_load_include('php', 'diff', 'DiffEngine'); // needed for DrupalDiffFormat
  */
 class ReverseDiffFormatter extends DrupalDiffFormatter {
 
+  // storage of the matching blocks
   public $blocks = array();
 
   /**
@@ -133,8 +132,6 @@ class ReverseDiffFormatter extends DrupalDiffFormatter {
       if ($edit->type == 'copy') {
         $this->rows = array_merge ($this->rows, $edit->orig);
         $this->blocks[] = $edit->orig;
-      } else {
-       // $this->rows[] = FINGERPRINT_REVERSE_DIFF_SEPARATOR; // empty line for separating
       }
     }
   }
