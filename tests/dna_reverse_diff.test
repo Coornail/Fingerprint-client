@@ -59,11 +59,35 @@ class FingerprintReverseDiff extends DrupalWebTestCase {
     $this->clickLink('Similarities');
 
     // There must be a link with the first node name
-    // index 0 is in the breadcrumb, there must be an another one
     $this->assertLink('Original dump');
     $this->clickLink('Original dump');
-    $this->drupalGet('fingerprint_similar_view/1/2');
 
+    // There must be a difference between the dumps
+    $this->assertText('-----------------------');
+  }
+
+
+  public function testMultipleDiff() {
+    // User who has rights to create dumps
+    $fingerprint_user = $this->drupalCreateUser(array('create fingerprint content', 'delete own fingerprint content', 'edit own fingerprint content', 'access own fingerprint content', 'administer site configuration'));
+    $this->drupalLogin($fingerprint_user);
+
+    // User saves a dump
+    $this->drupalGet('node/add/fingerprint');
+    $this->drupalPost('node/add/fingerprint', array(), 'Save');
+
+    // Change site name
+    variable_set('site_name', 'site_name_changed');
+
+    // Add an another dump
+    $this->drupalGet('node/add/fingerprint');
+    $this->drupalPost('node/add/fingerprint', array(), 'Save');
+
+    // Add an another dump
+    $this->drupalGet('node/add/fingerprint');
+    $this->drupalPost('node/add/fingerprint', array(), 'Save');
+
+    $this->drupalGet('fingerprint_similar_view/1/2/3');
     // There must be a difference between the dumps
     $this->assertText('-----------------------');
   }
