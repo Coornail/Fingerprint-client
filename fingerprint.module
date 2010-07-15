@@ -330,7 +330,7 @@ function fingerprint_theme($existing, $type, $theme, $path) {
 function fingerprint_block($op = 'list', $delta = 0, $edit = array()) {
   if ($op == 'list') {
     $blocks[0] = array('info' => t('Find similarities'),
-        'cache' => BLOCK_CACHE_PER_USER);
+        'cache' => BLOCK_CACHE_PER_USER, 'region' => 'left');
 
     return $blocks;
   }
