@@ -2,6 +2,8 @@
 
 // Separates the similar blocks from eachother
 define('FINGERPRINT_REVERSE_DIFF_SEPARATOR', "\n--------------------------------------------------------------------------------\n");
+// Number of maximum nodes to show in listings
+define('FINGERPRINT_REVERSE_DIFF_MAX_NODES', 10);
 
 /**
  * Callback for node/%/fingerprint_reverse_diff and block[0]
@@ -9,6 +11,9 @@ define('FINGERPRINT_REVERSE_DIFF_SEPARATOR', "\n--------------------------------
  *
  * @param $nodes
  *   A node id, object, or an array of node ids
+ *
+ * @todo
+ *   - Write my own pager (just prev and next)
  */
 function fingerprint_similar_list($nodes) {
   global $user;
@@ -24,12 +29,12 @@ function fingerprint_similar_list($nodes) {
 
   $path = 'fingerprint_similar_view/' . implode('/', $nodes) . '/';
 
-  $result = db_query(db_rewrite_sql('SELECT nid, title FROM {node} WHERE type="fingerprint" AND nid NOT IN('. db_placeholders($nodes, 'int') .')'), $nodes);
+  $result = pager_query(db_rewrite_sql('SELECT nid, title FROM {node} WHERE type="fingerprint" AND nid NOT IN('. db_placeholders($nodes, 'int') .')'), FINGERPRINT_REVERSE_DIFF_MAX_NODES, 0, NULL, $nodes);
   while ($other_node = db_fetch_object($result)) {
     $other_nodes[] = l($other_node->title, $path . $other_node->nid);
   }
 
-  return theme('item_list', $other_nodes);
+  return theme('item_list', $other_nodes) . theme('pager');
 }
 
 
