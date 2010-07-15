@@ -4,18 +4,29 @@
 define('FINGERPRINT_REVERSE_DIFF_SEPARATOR', "\n--------------------------------------------------------------------------------\n");
 
 /**
- * Callback for node/%/fingerprint_reverse_diff
+ * Callback for node/%/fingerprint_reverse_diff and block[0]
+ * Shows a list of nodes to find similarities
+ *
+ * @param $nodes
+ *   A node id, object, or an array of node ids
  */
-function fingerprint_similar_list($node) {
+function fingerprint_similar_list($nodes) {
   global $user;
   $other_nodes = array();
 
-  if (!is_object($node)) {
-    $node = node_load($node);
+  if (is_int($nodes) || is_string($nodes)) {
+    $nodes = array((int)$nodes);
   }
-  $result = db_query(db_rewrite_sql('SELECT nid, title FROM {node} WHERE type="fingerprint" AND nid<>%d'), $node->nid);
+
+  if (is_object($nodes)) {
+    $nodes = array($nodes->nid);
+  }
+
+  $path = 'fingerprint_similar_view/' . implode('/', $nodes) . '/';
+
+  $result = db_query(db_rewrite_sql('SELECT nid, title FROM {node} WHERE type="fingerprint" AND nid NOT IN('. db_placeholders('int') .')'), $nodes);
   while ($other_node = db_fetch_object($result)) {
-    $other_nodes[] = l($other_node->title, 'fingerprint_similar_view/'. $node->nid .'/'. $other_node->nid);
+    $other_nodes[] = l($other_node->title, $path . $other_node->nid);
   }
 
   return theme('item_list', $other_nodes);
