@@ -110,6 +110,9 @@ class FingerprintSettings {
     if (isset($settings['enabled_modules'])) {
       $this->setEnabledModules($settings['enabled_modules']);
     }
+    if (isset($settings['status_report'])) {
+      $this->setStatusReport($settings['status_report']);
+    }
   }
 
 
