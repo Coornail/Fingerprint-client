@@ -24,7 +24,7 @@ function fingerprint_similar_list($nodes) {
 
   $path = 'fingerprint_similar_view/' . implode('/', $nodes) . '/';
 
-  $result = db_query(db_rewrite_sql('SELECT nid, title FROM {node} WHERE type="fingerprint" AND nid NOT IN('. db_placeholders('int') .')'), $nodes);
+  $result = db_query(db_rewrite_sql('SELECT nid, title FROM {node} WHERE type="fingerprint" AND nid NOT IN('. db_placeholders($nodes, 'int') .')'), $nodes);
   while ($other_node = db_fetch_object($result)) {
     $other_nodes[] = l($other_node->title, $path . $other_node->nid);
   }
