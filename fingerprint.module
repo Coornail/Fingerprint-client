@@ -325,3 +325,45 @@ function fingerprint_theme($existing, $type, $theme, $path) {
     ),
   );
 }
+
+
+/**
+ * Implementation of hook_block().
+ */
+function fingerprint_block($op = 'list', $delta = 0, $edit = array()) {
+  if ($op == 'list') {
+    $blocks[0] = array('info' => t('Find similarities'),
+        'cache' => BLOCK_CACHE_PER_USER, 'region' => 'left');
+
+    return $blocks;
+  }
+  else if ($op == 'view') {
+    switch($delta) {
+      case 0:
+        $block = array('subject' => t('Find similarities'),
+            'content' => _fingerprint_similar_list());
+        break;
+    }
+    return $block;
+  }
+
+}
+
+
+/**
+ * Wrapper around the similarity search node list
+ *
+ * The block only shows in the url fingerprint_similar_view/*
+ */
+function _fingerprint_similar_list() {
+  if (arg(0) != 'fingerprint_similar_view') {
+    return NULL;
+  }
+
+  $nodes = arg();
+  array_shift($nodes);
+
+  module_load_include('inc', 'fingerprint', 'fingerprint.reverse_diff');
+  return fingerprint_similar_list($nodes);
+}
+
