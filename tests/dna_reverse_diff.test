@@ -67,6 +67,9 @@ class FingerprintReverseDiff extends DrupalWebTestCase {
   }
 
 
+  /**
+   * @todo Find a good user story how can one generate very different dumps
+   */
   public function testMultipleDiff() {
     // User who has rights to create dumps
     $fingerprint_user = $this->drupalCreateUser(array('create fingerprint content', 'delete own fingerprint content', 'edit own fingerprint content', 'access own fingerprint content', 'administer site configuration'));

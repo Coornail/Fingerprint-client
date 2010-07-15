@@ -41,8 +41,6 @@ function fingerprint_similar_list($nodes) {
 
 /**
  * Callback for fingerprint_similar_view
- *
- * @todo Merge this and parts of fingerprint_view_diff()
  */
 function fingerprint_view_similar() {
   $nids = arg();

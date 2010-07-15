@@ -98,7 +98,7 @@ class FingerprintXml extends FingerprintSettings {
    * @param $highlight
    *   Boolean if you want to highlight the text or not
    *   True means you want to display it in Drupal
-   *   False means you need the clean xml output (without pre and geshi filter) for additional processing
+   *   False means you need the clean xml output (without pre and geshi filter) for additional processing or downloading
    *
    * @todo make this themable by drupal
    *
