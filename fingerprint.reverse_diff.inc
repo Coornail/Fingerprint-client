@@ -71,6 +71,7 @@ function fingerprint_view_similar() {
     $node->body = explode("\n", $node->body);
   }
 
+  // Iterate trough the nodes and diff
   $node_number = count($nodes)-1;
   for ($i=0; $i<$node_number; $i++) {
     $diff = new Diff($nodes[$i]->body, $nodes[$i+1]->body);
