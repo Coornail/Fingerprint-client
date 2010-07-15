@@ -91,7 +91,7 @@ class FingerprintSettings {
    * Imports settings that's exported from get_output_items()
    */
   protected function importSettings($settings) {
-    if (!isset($settings['export_version']) || $settings['export_version'] != FINGERPRINT_VERSION) {
+    if (!isset($settings['export_version']) || !$this->isImportSupported($settings['export_version'])) {
       throw new Exception("Importing version ". check_plain($settings['export_version']) .' doesn\'t match current version: '. FINGERPRINT_VERSION , E_USER_WARNING);
     }
     if (isset($settings['timestamp'])) {
@@ -268,6 +268,20 @@ class FingerprintSettings {
     }
     $obj = $arr;
     $obj['hash'] = $object_hash;
+  }
+
+
+  /**
+   * Checks if the version you want to import is supported
+   */
+  protected function isImportSupported($version) {
+    if ($version == FINGERPRINT_VERSION)
+      return TRUE;
+
+    if ($version == '0.1' && FINGERPRINT_VERSION == '0.2' )
+      return TRUE;
+
+    return FALSE;
   }
 
 }
