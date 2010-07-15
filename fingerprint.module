@@ -349,6 +349,8 @@ function fingerprint_block($op = 'list', $delta = 0, $edit = array()) {
 
 /**
  * Wrapper around the similarity search node list
+ *
+ * The block only shows in the url fingerprint_similar_view/*
  */
 function _fingerprint_similar_list() {
   if (arg(0) != 'fingerprint_similar_view') {
