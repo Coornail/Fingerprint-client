@@ -54,7 +54,16 @@ function fingerprint_view_similar() {
 
   }
 
-//  drupal_set_title(t('Similar rows in @origin and @other', array('@origin' => $current->title, '@other' => $other->title)));
+  // If there are more than 2 nodes to compare, don't put it in the title
+  $node_titles = '';
+  if (count($nodes) === 2) {
+    drupal_set_title(t('Similar patterns in @origin and @other', array('@origin' => $nodes[0]->title, '@other' => $nodes[1]->title)));
+  } else {
+    drupal_set_title(t('Similar patterns in'));
+    foreach ($nodes as $node) {
+      $node_titles[] = l($node->title, 'node/'. $node->nid);
+    }
+  }
 
   // Emulate node render
   foreach ($nodes as &$node) {
@@ -79,7 +88,7 @@ function fingerprint_view_similar() {
   }
 
   $similar = implode(FINGERPRINT_REVERSE_DIFF_SEPARATOR, $blocks);
-  return theme('fingerprint_reverse_diff', $similar);
+  return (count($node_titles) ? theme('item_list', $node_titles) : '') . theme('fingerprint_reverse_diff', $similar);
 }
 
 
