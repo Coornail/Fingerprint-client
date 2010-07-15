@@ -93,6 +93,8 @@ class FingerprintReverseDiff extends DrupalWebTestCase {
     $this->drupalGet('fingerprint_similar_view/1/2/3');
     // There must be a difference between the dumps
     $this->assertText('-----------------------');
+    // The site name is different, it shouldn't be displayed
+    $this->assertNoText('<site_name>');
   }
 
 }
