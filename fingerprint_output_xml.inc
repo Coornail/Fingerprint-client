@@ -52,7 +52,7 @@ class FingerprintXml extends FingerprintSettings {
     }
 
     foreach ($data as $key => $value) {
-      if (empty($value)) {
+      if (is_array($value) && empty($value)) {
         continue;
       }
 
