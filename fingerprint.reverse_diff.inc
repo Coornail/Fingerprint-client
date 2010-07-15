@@ -29,7 +29,7 @@ function fingerprint_similar_list($nodes) {
 
   $path = 'fingerprint_similar_view/' . implode('/', $nodes) . '/';
 
-  $result = pager_query(db_rewrite_sql('SELECT nid, title FROM {node} WHERE type="fingerprint" AND nid NOT IN('. db_placeholders($nodes, 'int') .')'), FINGERPRINT_REVERSE_DIFF_MAX_NODES, 0, NULL, $nodes);
+  $result = pager_query(db_rewrite_sql('SELECT nid, title FROM {node} WHERE type="fingerprint" AND nid NOT IN('. db_placeholders($nodes, 'int') .') ORDER BY created DESC'), FINGERPRINT_REVERSE_DIFF_MAX_NODES, 0, NULL, $nodes);
   while ($other_node = db_fetch_object($result)) {
     $other_nodes[] = l($other_node->title, $path . $other_node->nid);
   }
