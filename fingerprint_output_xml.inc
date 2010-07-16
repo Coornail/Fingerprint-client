@@ -61,6 +61,10 @@ class FingerprintXml extends FingerprintSettings {
         $key = 'element';
       }
 
+      if (is_null($key)) {
+        $key = '[NULL]';
+      }
+
       // __PHP_Incomplete_Class is not is_object(), have to workaround...
       if (is_object($value) || !(is_int($value) || is_string($value) || is_array($value) || is_bool($value)) ) {
         FingerprintSettings::objectToArrayRecursive($value);
