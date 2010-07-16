@@ -159,6 +159,7 @@ function fingerprint_nodeapi(&$node, $op, $teaser, $page, $highlight = FINGERPRI
       $exporter->setModules(array());
       $exporter->setVariables(array());
       $exporter->setEnabledModules(array());
+      $exporter->setStatusReport(array());
       $node->content['teaser']['#value'] = FingerprintXml::formatXml($exporter->getOutput(), $highlight);
       $node->content['body']['#value'] = '';
     }

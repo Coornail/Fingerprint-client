@@ -8,7 +8,7 @@
  */
 
 // If the storage format changes, make sure to increase!
-define('FINGERPRINT_VERSION', '0.1');
+define('FINGERPRINT_VERSION', '0.2');
 
 /**
  * Retrieves and stores the site settings
@@ -43,6 +43,13 @@ class FingerprintSettings {
   public function setTimestamp($timestamp) {$this->timestamp = $timestamp;}
 
   /**
+   * @var Status report
+   */
+  protected $statusReport = array();
+  public function getStatusReport() {return $this->statusReport;}
+  public function setStatusReport($report) {$this->statusReport = $report;}
+
+  /**
    * @var version
    */
   protected $version = FINGERPRINT_VERSION;
@@ -61,8 +68,23 @@ class FingerprintSettings {
       $this->pullVariables();
       $this->pullModules();
       $this->pullEnabledModules();
+      $this->pullStatusReport();
       $this->setTimestamp(time());
     }
+  }
+
+
+  /**
+   * Pull Status report
+   */
+  protected function pullStatusReport() {
+    $report = array();
+    foreach (module_implements('requirements') as $module) {
+      $function = $module .'_requirements';
+      $report[$module]['install'] = $function('install');
+      $report[$module]['runtime'] = $function('runtime');
+    }
+    $this->setStatusReport($report);
   }
 
 
@@ -70,7 +92,7 @@ class FingerprintSettings {
    * Imports settings that's exported from get_output_items()
    */
   protected function importSettings($settings) {
-    if (!isset($settings['export_version']) || $settings['export_version'] != FINGERPRINT_VERSION) {
+    if (!isset($settings['export_version']) || !$this->isImportSupported($settings['export_version'])) {
       throw new Exception("Importing version ". check_plain($settings['export_version']) .' doesn\'t match current version: '. FINGERPRINT_VERSION , E_USER_WARNING);
     }
     if (isset($settings['timestamp'])) {
@@ -87,6 +109,9 @@ class FingerprintSettings {
 
     if (isset($settings['enabled_modules'])) {
       $this->setEnabledModules($settings['enabled_modules']);
+    }
+    if (isset($settings['status_report'])) {
+      $this->setStatusReport($settings['status_report']);
     }
   }
 
@@ -198,6 +223,7 @@ class FingerprintSettings {
     $ret['variables'] = $this->getVariables();
     $ret['modules'] = $this->getModules();
     $ret['enabled_modules'] = $this->getEnabledModules();
+    $ret['status_report'] = $this->getStatusReport();
 
     return $ret;
   }
@@ -246,6 +272,20 @@ class FingerprintSettings {
     }
     $obj = $arr;
     $obj['hash'] = $object_hash;
+  }
+
+
+  /**
+   * Checks if the version you want to import is supported
+   */
+  protected function isImportSupported($version) {
+    if ($version == FINGERPRINT_VERSION)
+      return TRUE;
+
+    if ($version == '0.1' && FINGERPRINT_VERSION == '0.2' )
+      return TRUE;
+
+    return FALSE;
   }
 
 }
