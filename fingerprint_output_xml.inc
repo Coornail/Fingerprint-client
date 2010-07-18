@@ -61,8 +61,8 @@ class FingerprintXml extends FingerprintSettings {
         $key = 'element';
       }
 
-      if (is_null($key)) {
-        $key = '[NULL]';
+      if (is_null($value)) {
+        $value = '[NULL]';
       }
 
       // __PHP_Incomplete_Class is not is_object(), have to workaround...
